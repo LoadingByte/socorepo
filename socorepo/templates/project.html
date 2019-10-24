@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+
+{% block title %}{{ project.label }}{% endblock %}
+
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="project.css") }}"/>
+{% endblock %}
+
+
+{% block breadcrumb %}
+    <a href="{{ url_for("project_list") }}">Projects</a>
+    &rightarrow; {{ project.label }}
+{% endblock %}
+
+
+{% block api_link %}
+    <a href="{{ url_for("api_component_list", project_id=project.id) }}" target="_blank">View in API</a>
+{% endblock %}
+
+
+{% block content %}
+    {% if project.description %}
+        <p>{{ project.description }}</p>
+    {% endif %}
+
+    {% if highlight_components|length != 0 %}
+        <h2>Highlight Component{{ "s" if highlight_components|length != 1 }}</h2>
+
+        <div id="highlight-container">
+            {% for highlight_label, highlight_component in highlight_components %}
+                <div class="{{ highlight_component.qualifier.color }}">
+                    <h3>{{ highlight_label }}</h3>
+                    Version {{ highlight_component.version }}<br/>
+                    {% for matcher in occurring_featured_asset_type_matchers %}
+                        {# We expect this loop to run only once. #}
+                        {% for asset in highlight_component.assets if asset.matcher_causing_featuring == matcher %}
+                            <a href="{{ asset.url }}" class="boxlink">
+                                <b>&DownArrowBar;</b> {{ asset.type }}
+                            </a>
+                        {% endfor %}
+                    {% endfor %}
+                    <br/>
+                    <a href="{{ url_for("component", project_id=project.id, version=highlight_component.version) }}">
+                        More
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <h2>All Components</h2>
+
+    <form method="get">
+        <div>{{ component_filter_form.version.label }} {{ component_filter_form.version }}</div>
+        <div>{{ component_filter_form.qualifier.label }} {{ component_filter_form.qualifier }}</div>
+        {{ component_filter_form.filter }}
+    </form>
+
+    {% if components|length != 0 %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Qualifier</th>
+                    <th>Version</th>
+                </tr>
+                </thead>
+                {% for component in components %}
+                    <tr class="{{ component.qualifier.color }}">
+                        <td>{{ component.qualifier.name }}</td>
+                        <td>{{ component.version }}</td>
+                        <td>
+                            <a href="{{ url_for("component", project_id=project.id, version=component.version) }}">
+                                More
+                            </a>
+                        </td>
+                        {% for matcher in occurring_featured_asset_type_matchers %}
+                            <td class="has-boxlink">
+                                {# We expect this loop to run only once. #}
+                                {% for asset in component.assets if asset.matcher_causing_featuring == matcher %}
+                                    <a href="{{ asset.url }}" class="boxlink">
+                                        <b>&DownArrowBar;</b> {{ asset.type }}
+                                    </a>
+                                {% endfor %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% else %}
+        <p>Sorry, but there don't seem to be any components matching your filters :(</p>
+    {% endif %}
+{% endblock %}

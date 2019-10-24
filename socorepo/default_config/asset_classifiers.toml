@@ -1,0 +1,73 @@
+# -------------------------------------------------------------------------------------------------
+# Each fetched asset is assigned all asset classifiers whose CASE-INSENSITIVE regex matches its filename.
+# Classifiers are often just referred to as clfs. Neither are they allowed to contain spaces nor question marks.
+#
+# After matching, the classifiers are then utilized twofold:
+# Firstly, the classifiers of a specific asset are sorted by declaration order, joined with spaces,
+# and then displayed as the so-called asset type (e.g., "Win 32-bit ARM").
+# Secondly, the assets of a specific componenent are sorted by their classifiers.
+# Not only does this sorting have a visual impact, it obviously also influences featured asset type matching!
+# -------------------------------------------------------------------------------------------------
+
+
+# Python versions; see:
+# https://www.python.org/dev/peps/pep-0427/#file-name-convention
+# https://www.python.org/dev/peps/pep-0425/
+"Py3.9" = '(?<![a-z])(py|cp)3\.?9(?!\d)'
+"Py3.8" = '(?<![a-z])(py|cp)3\.?8(?!\d)'
+"Py3.7" = '(?<![a-z])(py|cp)3\.?7(?!\d)'
+"Py3.6" = '(?<![a-z])(py|cp)3\.?6(?!\d)'
+"Py3.5" = '(?<![a-z])(py|cp)3\.?5(?!\d)'
+"Py3.4" = '(?<![a-z])(py|cp)3\.?4(?!\d)'
+"Py3.3" = '(?<![a-z])(py|cp)3\.?3(?!\d)'
+"Py3.2" = '(?<![a-z])(py|cp)3\.?2(?!\d)'
+"Py3.1" = '(?<![a-z])(py|cp)3\.?1(?!\d)'
+"Py3.0" = '(?<![a-z])(py|cp)3\.?0(?!\d)'
+Py3 = '(?<![a-z])py3(?!\.?\d)'
+"Py2.7" = '(?<![a-z])(py|cp)2\.?7(?!\d)'
+"Py2.6" = '(?<![a-z])(py|cp)2\.?6(?!\d)'
+"Py2.5" = '(?<![a-z])(py|cp)2\.?5(?!\d)'
+"Py2.4" = '(?<![a-z])(py|cp)2\.?4(?!\d)'
+"Py2.3" = '(?<![a-z])(py|cp)2\.?3(?!\d)'
+"Py2.2" = '(?<![a-z])(py|cp)2\.?2(?!\d)'
+"Py2.1" = '(?<![a-z])(py|cp)2\.?1(?!\d)'
+"Py2.0" = '(?<![a-z])(py|cp)2\.?0(?!\d)'
+Py2 = '(?<![a-z])py2(?!\.?\d)'
+# See: https://github.com/pypa/manylinux#docker-images
+UCS4 = '(?<![a-z])cp(2[0-7]|3[0-2])mu(?![a-z])'
+UCS2 = '(?<![a-z])cp(2[0-7]|3[0-2])m(?![a-z])'
+
+
+# Operating systems
+Win = '(?<![a-z])win(?![a-z])|windows|\.exe$'
+Cygwin = 'cygwin'
+macOS = 'macos|os.?x|darwin|\.app$'
+Linux = 'linux'
+FreeBSD = 'free.?bsd'
+OpenBSD = 'open.?bsd'
+NetBSD = 'net.?bsd'
+Solaris = 'solaris|sunos'
+
+
+# Architectures
+# For Python cases, see also:
+# distutils.util.get_platform()
+# _osx_support.get_platform_osx()
+64-bit = '(?<![a-z])x86.64|x64|amd64|arm64|ppc64|fat64|fat3(?!\d)|(?<![a-z])intel(?![a-z])'
+32-bit = '(?<!\d)(32|86|386|686)(?!\d|.?64)|(?<![a-z])(arm|ppc|fat)(?![a-z]|.?64)|(?<![a-z])intel(?![a-z])'
+ARM = '(?<![a-z])arm(?![a-z])'
+PowerPC = '(?<![a-z])((ppc|fat)(?![a-z])|(fat3|fat64)(?!\d))'
+
+
+# File contents
+Sources = '(?<![a-z])(src|source|sources)(?![a-z])'
+JavaDoc = 'javadoc'
+
+
+# File types
+ZIP = '\.zip$'
+TGZ = '\.(tgz|tar\.gz)$'
+EXE = '\.exe$'
+JAR = '\.jar$'
+POM = '\.pom$'
+WHL = '\.whl$'

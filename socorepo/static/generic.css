@@ -1,0 +1,93 @@
+/* Tables */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    border-spacing: 0 2px;
+}
+
+td, th {
+    padding: 0.5em 1.5em;
+    text-align: center;
+}
+
+thead tr {
+    background-color: transparent !important; /* exclude table head from row coloring */
+}
+
+tr:nth-child(2n) {
+    background-color: #ddd;
+}
+
+tr:nth-child(2n + 1) {
+    background-color: #eee;
+}
+
+
+/* Boxlinks */
+
+a.boxlink {
+    padding: 0.1em 0.5em;
+    text-decoration: none;
+    white-space: nowrap; /* line-wrapping boxlinks look awful */
+    border: 0.15em solid rgba(0, 0, 0, 0.5);
+    color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 0.2em rgba(0, 0, 0, 0.3);
+    transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
+}
+
+a.boxlink:hover {
+    color: rgba(0, 0, 0, 0.95);
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 0.3em rgba(0, 0, 0, 0.4);
+}
+
+
+/* Version qualifier colors */
+
+.red, .orange, .yellow, .turquoise, .green {
+    transition: background-color 0.25s ease-in-out;
+}
+
+.red {
+    background-color: #ffdfdf !important;
+}
+
+.red:hover {
+    background-color: #f5a9a9 !important;
+}
+
+.orange {
+    background-color: #ffdc9f !important;
+}
+
+.orange:hover {
+    background-color: #f9b74d !important;
+}
+
+.yellow {
+    background-color: #fff99f !important;
+}
+
+.yellow:hover {
+    background-color: #fae02f !important;
+}
+
+.turquoise {
+    background-color: #b3ffe9 !important;
+}
+
+.turquoise:hover {
+    background-color: #48e6c4 !important;
+}
+
+.green {
+    background-color: #aaffaa !important;
+}
+
+.green:hover {
+    background-color: #63eb68 !important;
+}

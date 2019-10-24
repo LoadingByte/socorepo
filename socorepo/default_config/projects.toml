@@ -1,0 +1,105 @@
+# -------------------------------------------------------------------------------------------------
+# Each project defined in this file corresponds to a single download page on the website.
+# See the example projects below for information on how to write project definitions.
+# When you read through them in sequential order, these examples function as a guide to Socorepo.
+# -------------------------------------------------------------------------------------------------
+
+
+# The project ID is mainly used to identify the project in URLs.
+[socorepo]
+# A human-readable name of the project, displayed in titles etc.
+label = "Socorepo"
+# OPTIONAL: A long description of the project that is displayed on the project's main page. It may contain HTML markup.
+description = """
+Socorepo, the SOftware COmponent REPOsitory exPOser, is a lightweight Python webapp that pulls
+software component listings from a variety of different sources and presents them as intuitive download pages
+to end users.
+"""
+# The mechanism that pulls software component listings from somewhere and parses them.
+# In this case, the GitHub tags locator fetches all tags/releases from the specified GitHub repository
+# and exposes them as versions of the project.
+# For each version, it then provides the source code archives as well as any manually attached assets for download.
+locator = "github_tags"
+# What now follows are special properties unique to the specified locator.
+# They are prefixed with the name of the locator.
+# In this case, the GitHub tags locator requires the owner and name of the repository
+github_tags.owner = "LoadingByte"
+github_tags.repository = "socorepo"
+# In order to increase the rate limit of the GitHub API or to access private repositories,
+# requests can OPTIONALLY be authenticated.
+# If you desire to do so, please choose EITHER username/password authentication ("login"),
+# authentication with an OAuth token ("oauth_token"),
+# or authentication with a client ID and client secret ("oauth_app").
+#github_tags.login.username = ""
+#github_tags.login.password = ""
+#github_tags.oauth_token = ""
+#github_tags.oauth_app.client_id = ""
+#github_tags.oauth_app.client_secret = ""
+
+
+[quarterbukkit]
+label = "QuarterBukkit"
+# The Nexus 3 locator fetches any components along with their assets from any Sonatype Nexus 3 instance.
+# It should work for all kinds of Nexus 3 repositories, not just Maven ones (even though we haven't tested them all).
+locator = "nexus3"
+# Root URL of the Nexus 3 server.
+nexus3.server = "https://repo.loadingbyte.com/"
+# Name of the repository on the server which houses the components.
+nexus3.repository = "maven-public"
+# OPTIONAL: If applicable, the group of your components.
+# For example, Maven components do have a group while PyPI ones don't.
+nexus3.component_group = "com.quartercode"
+# Name of your components.
+nexus3.component_name = "quarterbukkit-package"
+
+
+[flask]
+label = "Flask"
+# The PyPI locator fetches releases from any PyPI server that exposes the JSON interface.
+locator = "pypi"
+# URL of the PyPI server. The URL must be chosen such that the JSON interface is exposed at "<url>/<project>/json".
+# E.g., the official PyPI exposes the JSON interface at "https://pypi.org/pypi/<project>/json".
+pypi.server = "https://pypi.org/pypi/"
+# Name of the project on PyPI.
+pypi.project = "Flask"
+# OPTIONAL: Whether to verify the SSL/TLS certificate provided by the server (default is true).
+# Beware of disabling this setting. Without proper verification, a man-in-the-middle could manipulate what is
+# fetched by Socorepo, replace download URLs and thereby distribute malware through your site!
+#pypi.verify_tls_certificate = true
+
+
+[numpy]
+# OPTIONAL: This special key references templates, which are defined in "project_templates.toml".
+# Every property from each of these templates is "copied" into this project.
+# You can specifiy as many templates as you want.
+# See "project_templates.toml" for more information on templates.
+__templates__ = [ "official_pypi" ]
+label = "NumPy"
+# Each asset is assigned all the asset classifiers from "asset_classifiers.toml" that match its filename.
+# The classifiers referenced in this OPTIONAL list are excluded from matching.
+# This can be useful in cases like NumPy, where each asset matches so many classifiers that ones
+# like "WHL" (.whl file type) just become undesired noise.
+excluded_asset_clfs = [ "WHL" ]
+# All the classifiers that are assigned to a specific asset in unison are called that asset's type.
+# For example, if a specific asset matches the classifiers "Win", "64-bit", and "Py3.7",
+# that asset's type would be "Win 64-bit Py3.7".
+#
+# This OPTIONAL key lists patterns for so-called featured asset types.
+# For each featured type, the first asset with that type is displayed more prominently than non-featured assets.
+#
+# Let's look at the simple rules that govern whether a pattern P matches a given asset type T.
+# First of all, each classifier in T must match a classifier in P and vice-versa (THE ORDER IS IRRELEVANT).
+#   E.g., P="Sources ZIP" only matches T="Sources ZIP", but not T="Sources TGZ" or T="Sources JavaDoc ZIP".
+# If, however, a classifier in P starts is preceded by a "?", it may, but doesn't have to have a counterpart in T.
+#   E.g., P="Py3.7 macOS 64-bit ?32-bit" matches T="Py3.7 macOS 64-bit 32-bit" and also T="Py3.7 macOS 64-bit",
+#   but not T="Py3.7 macOS 32-bit".
+# You can furthermore declare arbitrary many alternatives for classifiers in P using "|".
+#   E.g., P="Py3.6|Py3.5 Win 32-bit" matches T="Py3.6 Win 32-bit" and T="Py3.5 Win 32-bit",
+#   but not T="Win 32-bit Py3.4"
+# Finally, "*" is a wildcard. It is basically equivilant to ".*" in regex.
+#   E.g., P="Py* Win 64-bit" matches T="Py3.5 Win 64-bit", T="Py2.7 Win 64-bit", and so on,
+#   but not T="Win 64-bit" or T="Win 64-bit ARM".
+# Notably, by declaring an isolated "*", you can match any unexpected classifiers.
+#   E.g., P="Linux *" matches T="Linux 32-bit", "Py3.2 Linux", and so on, but no "Win 64-bit".
+featured_asset_types = [ "Sources ZIP", "Py3.7 macOS 64-bit ?32-bit", "Py3.6|Py3.5 Win 32-bit", "Py* Win 64-bit", "Linux *" ]
+pypi.project = "numpy"

@@ -1,0 +1,4 @@
+include README.md LICENSE
+recursive-include socorepo/default_config *
+recursive-include socorepo/static *
+recursive-include socorepo/templates *

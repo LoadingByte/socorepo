@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+
+{% block title %}Error {{ error_code }}: {{ error_name }}{% endblock %}
+
+
+{% block breadcrumb %}
+    Error {{ error_code }}
+{% endblock %}
+
+
+{% block content %}
+    <p>{{ error_desc }}</p>
+    <p>
+        <a href="{{ url_for("project_list") }}">Go back to the project list.</a>
+    </p>
+{% endblock %}

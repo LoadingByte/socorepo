@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>{{ global_title }} &middot; {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="layout.css") }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="generic.css") }}"/>
+    <link rel="icon" href="{{ url_for("favicon") }}"/>
+    {% block head %}{% endblock %}
+</head>
+<body>
+<div id="container">
+    <header>
+        {{ heading }}
+    </header>
+    <main>
+        {% block headline %}
+            <h1>{{ self.title() }}</h1>
+        {% endblock %}
+        <nav>
+            <span>You are here: {% block breadcrumb %}{% endblock %}</span>
+            <span style="float: right;">{% block api_link %}{% endblock %}</span>
+        </nav>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        {{ footer }}
+    </footer>
+</div>
+</body>
+</html>

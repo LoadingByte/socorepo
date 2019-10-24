@@ -1,0 +1,37 @@
+# -------------------------------------------------------------------------------------------------
+# Each fetched component is assigned one of these version qualifiers based on its version string.
+# We say that a qualifier matches a version string if the qualifier's CASE-INSENSITIVE regex matches any of the
+# parts of the version string, i.e., parts separated by special chars or change between numeric and alpha chars.
+# E.g., the version string 1.0a-snap would be split into the parts "1", "0", "a", and "snap".
+# Now, the first version qualifier (by declaration order) that matches the version string of a component
+# is selected for that component.
+#
+# The version qualifier is often shown alongside a component. It is also used for filtering.
+# But more importantly, the version qualifier determines the consistent background color of the component.
+# -------------------------------------------------------------------------------------------------
+
+
+[Snapshot]
+color = "red"
+version_section_regex = "(snap|nightly|dev)"
+
+
+[Alpha]
+color = "orange"
+version_section_regex = "(alpha|^a$)"
+
+
+[Beta]
+color = "yellow"
+version_section_regex = "(beta|^b$)"
+
+
+["Release Candidate"]
+color = "turquoise"
+version_section_regex = "(rc|candidate|pre|^c$)"
+
+
+[Release]
+color = "green"
+default = true
+stable = true

@@ -1,0 +1,25 @@
+# File path to logfile. The path is relative to this settings file.
+logfile = "../socorepo.log"
+
+# The path under which the whole app can be accessed. Useful for reverse proxy setups.
+application_root = "/"
+
+# Number of seconds between updates of the component cache.
+fetch_interval = 3600
+
+
+[appearance]
+
+# This title is put into the <title> tag of the web page.
+title = "Socorepo"
+# This text is shown in the header of the web page.
+heading = "Socorepo"
+
+# File path to favicon image. The path is relative to this settings file.
+favicon = "favicon-loadingbyte.png"
+# File path to an HTML snippet that is embedded at the top of the homepage.
+# The path is relative to this settings file.
+homepage = "homepage.html"
+# Another HTML snippet that is embedded in the footer area of every page.
+# The path is relative to this settings file.
+footer = "footer.html"

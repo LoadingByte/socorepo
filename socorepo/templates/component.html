@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+
+{% block title %}{{ project.label }} &middot; {{ component.version }}{% endblock %}
+
+
+{% block headline %}
+    <h1 class="{{ component.qualifier.color }}">
+        {{ self.title() }} &middot; {{ component.qualifier.name }}
+    </h1>
+{% endblock %}
+
+
+{% block breadcrumb %}
+    <a href="{{ url_for("project_list") }}">Projects</a>
+    &rightarrow; <a href="{{ url_for("project", project_id=project.id) }}">{{ project.label }}</a>
+    &rightarrow; {{ component.version }}
+{% endblock %}
+
+
+{% block api_link %}
+    <a href="{{ url_for("api_asset_list", project_id=project.id, version=component.version) }}" target="_blank">
+        View in API
+    </a>
+{% endblock %}
+
+
+{% block content %}
+    {% if component.assets|length != 0 %}
+        <p>This component comes with the following assets, i.e., downloadable files:</p>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Asset type</th>
+                    <th>Filename</th>
+                    {% if has_file_size_column %}
+                        <th>Size</th>
+                    {% endif %}
+                    {% if has_checksums_column %}
+                        <th>Checksums</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                {% for asset in component.assets %}
+                    <tr class="{{ component.qualifier.color if asset.featured }}">
+                        <td>{{ asset.type }}</td>
+                        <td>
+                            {% if asset.filename|length > 30 %}
+                                <abbr title="{{ asset.filename }}">{{ asset.filename|truncate(25, leeway=5) }}</abbr>
+                            {% else %}
+                                {{ asset.filename }}
+                            {% endif %}
+                        </td>
+                        {% if has_file_size_column %}
+                            <td>{{ asset.file_size|filesizeformat if asset.file_size }}</td>
+                        {% endif %}
+                        {% if has_checksums_column %}
+                            <td>
+                                {% for algo, checksum in asset.checksums.items() %}
+                                    <abbr title="{{ checksum }}">{{ algo|upper }}</abbr>
+                                {% endfor %}
+                            </td>
+                        {% endif %}
+                        <td>
+                            <a href="{{ asset.url }}" {{ "class=boxlink" if asset.featured }}
+                               style="white-space: nowrap;">
+                                <b>&DownArrowBar;</b> Download
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% else %}
+        <p>
+            Sorry, but this component doesn't have any assets.
+            That is probably an error and not supposed to be that way :(
+        </p>
+    {% endif %}
+
+    <p style="margin-top: 3em;">
+        For your information, this component and its associated assets are sourced from here:
+    </p>
+    <div class="table-wrapper">
+        <table>
+            {% for row_th, row_td in component_info_table.items() %}
+                <tr>
+                    <th>{{ row_th }}</th>
+                    <td>{{ row_td }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

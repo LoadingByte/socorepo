@@ -1,0 +1,14 @@
+# -------------------------------------------------------------------------------------------------
+# The templates defined in this file can be included by any project in "projects.toml".
+# When a project includes a template, all properties under the template are "copied" into that project.
+# Templates are great to share common information (e.g., locators, server addresses, credentials, ...)
+# between multiple projects.
+#
+# Each first-level key in this file is considered a template.
+# Note that templates are allowed to include other templates as well!
+# -------------------------------------------------------------------------------------------------
+
+
+[official_pypi]
+locator = "pypi"
+pypi.server = "https://pypi.org/pypi/"

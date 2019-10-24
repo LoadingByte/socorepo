@@ -1,0 +1,78 @@
+/* Subheadings */
+
+h2 {
+    margin-top: 1.5em;
+}
+
+
+/* Highlight components */
+
+#highlight-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -0.5em -1em;
+}
+
+#highlight-container > div {
+    margin: 0.5em 1em;
+    padding: 0.6em 1.2em;
+    border: 0.2em solid rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+#highlight-container h3 {
+    margin: 0;
+    font-size: 1em;
+}
+
+#highlight-container .boxlink {
+    /* Make boxlinks take as much space as they need. */
+    display: inline-block;
+    margin: 0.4em 0;
+}
+
+
+/* Filter form */
+
+form {
+    display: inline-flex; /* must be inline so that background box doesn't cover whole page width */
+    flex-wrap: wrap;
+    margin-bottom: 0.7em; /* margin to component list table */
+    background-color: #eee;
+    border: 0.2em solid #aaa;
+}
+
+form > * {
+    margin: 0.5em 1em;
+}
+
+input, select {
+    padding: 0.5em 0.8em;
+    border: 0.2em solid #ddd;
+    background-color: #fafafa;
+    transition: border-color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+}
+
+input[type="submit"] {
+    padding: 0.5em 1.2em;
+}
+
+input:hover, select:hover {
+    border-color: #faa;
+}
+
+input:focus, select:focus {
+    border-color: #faa;
+    background-color: #fff;
+}
+
+
+/* Table */
+
+td.has-boxlink ~ .has-boxlink {
+    padding-left: 0.5em;
+}
+
+td.has-boxlink:not(:last-child) {
+    padding-right: 0.5em;
+}
