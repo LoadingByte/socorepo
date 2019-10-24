@@ -13,7 +13,8 @@ label = "Socorepo"
 description = """
 Socorepo, the SOftware COmponent REPOsitory exPOser, is a lightweight Python webapp that pulls
 software component listings from a variety of different sources and presents them as intuitive download pages
-to end users.
+to end users.<br/><br/>
+For more information, please refer to the <a href="https://github.com/LoadingByte/socorepo" target="_blank">GitHub page</a>.
 """
 # The mechanism that pulls software component listings from somewhere and parses them.
 # In this case, the GitHub tags locator fetches all tags/releases from the specified GitHub repository
