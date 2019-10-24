@@ -60,8 +60,10 @@ PowerPC = '(?<![a-z])((ppc|fat)(?![a-z])|(fat3|fat64)(?!\d))'
 
 
 # File contents
+Binary = '(?<![a-z])(bin|binary|binaries)(?![a-z])|(?<!javadoc|sources)\.jar'
 Sources = '(?<![a-z])(src|source|sources)(?![a-z])'
 JavaDoc = 'javadoc'
+Dev = '(?<![a-z])(dev|develop)(?![a-z])'
 
 
 # File types
