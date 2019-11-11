@@ -14,7 +14,7 @@ def app_root_404(env, resp):
     return [b"404 The application root has been reconfigured."]
 
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 # Load config.
 load_config()
