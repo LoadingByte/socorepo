@@ -1,0 +1,24 @@
+.tooltip {
+    position: relative;
+    display: inline-block;
+
+    border-bottom: 1px dotted;
+}
+
+.tooltip-content {
+    display: none;
+    z-index: 1;
+    position: absolute;
+    left: -0.2em;
+    bottom: -0.2em;
+    padding: 0.2em;
+    white-space: nowrap;
+
+    color: white;
+    background-color: #444;
+    box-shadow: 0 0 0.2em rgba(0, 0, 0, 0.3);
+}
+
+.tooltip:hover .tooltip-content {
+    display: block;
+}
