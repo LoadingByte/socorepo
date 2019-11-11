@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>{{ global_title }} &middot; {% block title %}{% endblock %}</title>
+    <title>{% block title %} &middot; {% endblock %} {{ global_title }}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="layout.css") }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="generic.css") }}"/>
     <link rel="icon" href="{{ url_for("favicon") }}"/>
