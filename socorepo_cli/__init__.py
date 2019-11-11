@@ -10,6 +10,6 @@ def default_config():
         print(f"Destination directory '{dst_dir}' already exists. Please delete it and then try again.")
         return
 
-    print(f"Extracting default Socorepo config files to '{dst_dir}...")
+    print(f"Extracting default Socorepo config files to '{dst_dir}'...")
     shutil.copytree(src_dir, "config")
     print("Done!")
