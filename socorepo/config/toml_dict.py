@@ -8,6 +8,8 @@ from typing import List, Type, Pattern
 
 import toml
 
+log = logging.getLogger("socorepo")
+
 
 class TomlDict:
     _filename: str
@@ -27,14 +29,14 @@ class TomlDict:
         try:
             return self._sub(key.split(".") if split_key else [key])
         except LookupError as e:
-            logging.error(str(e))
+            log.error(str(e))
             sys.exit()
 
     def req(self, key: str, type_: Type, *, split_key: bool = True, choices: list = None):
         try:
             return self._get(key, type_, split_key, choices)
         except LookupError as e:
-            logging.error(str(e))
+            log.error(str(e))
             sys.exit()
 
     def opt(self, key: str, type_: Type, *, split_key: bool = True, choices: list = None, apply: callable = None,
@@ -60,8 +62,8 @@ class TomlDict:
         while "__templates__" in self._dict:
             template_id = self._dict["__templates__"].pop(0)
             if template_id not in available_templates._dict:
-                logging.error("%s: Included template '%s' not found in '%s'.",
-                              self.error_prefix, template_id, available_templates._filename)
+                log.error("%s: Included template '%s' not found in '%s'.",
+                          self.error_prefix, template_id, available_templates._filename)
                 sys.exit()
 
             self.merge(available_templates.sub(template_id))

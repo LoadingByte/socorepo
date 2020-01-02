@@ -6,6 +6,8 @@ from socorepo import config
 from socorepo.fetcher.versions import get_version_qualifier, sort_components_by_version
 from socorepo.structs import Project, AssetTypeMatcher, ComponentPrototype, AssetPrototype, Component, Asset, AssetType
 
+log = logging.getLogger("socorepo")
+
 
 def fetch_components(project: Project):
     comp_proto_list = project.locator.fetch_component_prototypes()
@@ -73,12 +75,12 @@ def _find_matching_matcher(project: Project, matchers: List[AssetTypeMatcher], c
                            asset_proto: AssetPrototype, type_: AssetType) -> Optional[AssetTypeMatcher]:
     matching_matchers = [m for m in matchers if m.matches(type_)]
     if len(matching_matchers) > 1:
-        logging.warning("In project '%s', component with version '%s': "
-                        "Asset with filename '%s' matches multiple featured asset types: %s. "
-                        "This is discouraged. All but the first match will now be ignored. "
-                        "Try to rewrite your featured asset types such that each asset only matches one of them.",
-                        project.id, comp_proto.version, asset_proto.filename,
-                        ", ".join(f"'{m.pattern}'" for m in matching_matchers))
+        log.warning("In project '%s', component with version '%s': "
+                    "Asset with filename '%s' matches multiple featured asset types: %s. "
+                    "This is discouraged. All but the first match will now be ignored. "
+                    "Try to rewrite your featured asset types such that each asset only matches one of them.",
+                    project.id, comp_proto.version, asset_proto.filename,
+                    ", ".join(f"'{m.pattern}'" for m in matching_matchers))
     return next(iter(matching_matchers), None)
 
 

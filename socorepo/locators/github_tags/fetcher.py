@@ -11,6 +11,8 @@ from socorepo.locators.github_tags import GitHubTags, GitHubBasicAuth, GitHubOAu
 from socorepo.locators.helpers import fetch_json
 from socorepo.structs import ComponentPrototype, AssetPrototype
 
+log = logging.getLogger("socorepo")
+
 
 def fetch_component_prototypes(locator: GitHubTags) -> List[ComponentPrototype]:
     json_tag_listing = fetch_json_from_endpoint(locator, endpoint="tags")
@@ -44,15 +46,15 @@ def fetch_json_from_endpoint(locator: GitHubTags, endpoint: str) -> list:
         try:
             json_resp = fetch_json(url=(api_url + str(page)), session=session)
         except IOError as e:
-            logging.error("Cannot fetch listing of %s: %s", endpoint, e)
+            log.error("Cannot fetch listing of %s: %s", endpoint, e)
             return []
 
         if not isinstance(json_resp, list):
-            logging.error("GitHub returned an invalid JSON response that is not a listing of %s. "
-                          "Are you sure that the repository owner '%s' and repository name '%s' actually exist and "
-                          "the (optional) authentication information is correct? "
-                          "First 100 chars of server's response are: %.100s",
-                          endpoint, locator.owner, locator.repository, json_resp)
+            log.error("GitHub returned an invalid JSON response that is not a listing of %s. "
+                      "Are you sure that the repository owner '%s' and repository name '%s' actually exist and "
+                      "the (optional) authentication information is correct? "
+                      "First 100 chars of server's response are: %.100s",
+                      endpoint, locator.owner, locator.repository, json_resp)
             return []
 
         # Stop when we're past the last page.

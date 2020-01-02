@@ -12,23 +12,18 @@ from socorepo.consts import COLORS
 from socorepo.locators import LOCATOR_PARSERS
 from socorepo.structs import Project, VersionQualifier, AssetClfMatcher, AssetTypeMatcher
 
+log = logging.getLogger("socorepo")
 
-def load_config():
-    # Determine the config dir. Make the path absolute to avoid relative path confusion.
-    config.EXTERNAL_CONFIG = "SOCOREPO_CONFIG_DIR" in os.environ
-    config_dir = os.path.abspath(os.environ["SOCOREPO_CONFIG_DIR"] if config.EXTERNAL_CONFIG
-                                 else os.path.join(os.path.dirname(__file__), "../default_config"))
-
-    _load_general_settings(config_dir)
-    _load_version_qualifiers(config_dir)
-    _load_asset_clfs(config_dir)
-    _load_projects(config_dir)
+# Determine the config dir. Make the path absolute to avoid relative path confusion.
+config.EXTERNAL_CONFIG = "SOCOREPO_CONFIG_DIR" in os.environ
+config_dir = os.path.abspath(os.environ["SOCOREPO_CONFIG_DIR"] if config.EXTERNAL_CONFIG
+                             else os.path.join(os.path.dirname(__file__), "../default_config"))
 
 
-def _load_general_settings(config_dir):
+def load_general_settings():
     toml_settings = TomlDict.load(os.path.join(config_dir, "settings.toml"))
 
-    config.LOGFILE = os.path.join(config_dir, toml_settings.req("logfile", str))
+    config.LOG_DIR = os.path.join(config_dir, toml_settings.req("log_dir", str))
     config.APPLICATION_ROOT = toml_settings.req("application_root", str)
     config.FETCH_INTERVAL = toml_settings.req("fetch_interval", int)
 
@@ -42,7 +37,13 @@ def _load_general_settings(config_dir):
         config.APPEARANCE_FOOTER = Markup(f.read())
 
 
-def _load_version_qualifiers(config_dir):
+def load_remaining_config():
+    _load_version_qualifiers()
+    _load_asset_clfs()
+    _load_projects()
+
+
+def _load_version_qualifiers():
     config.VERSION_QUALIFIERS = []
 
     toml_qualifiers = TomlDict.load(os.path.join(config_dir, "version_qualifiers.toml"))
@@ -50,8 +51,8 @@ def _load_version_qualifiers(config_dir):
         toml_qualifier = toml_qualifiers.sub(name)
 
         if toml_qualifier.opt("default", bool, fallback=False) == ("version_section_regex" in toml_qualifier):
-            logging.error("%s: The 'version_section_regex' of a version qualifier must be present "
-                          "if and only if default = false.", toml_qualifier.error_prefix)
+            log.error("%s: The 'version_section_regex' of a version qualifier must be present "
+                      "if and only if default = false.", toml_qualifier.error_prefix)
             sys.exit()
 
         default = toml_qualifier.opt("default", bool, fallback=False)
@@ -72,11 +73,11 @@ def _load_version_qualifiers(config_dir):
         msg = "%s: There has to be exactly one default version classifier."
         if len(defaults) > 1:
             msg += f" You have defined {len(defaults)}: " + _quote_and_join(q.name for q in defaults)
-        logging.error(msg, toml_qualifiers.error_prefix)
+        log.error(msg, toml_qualifiers.error_prefix)
         sys.exit()
 
 
-def _load_asset_clfs(config_dir):
+def _load_asset_clfs():
     toml_asset_clfs = TomlDict.load(os.path.join(config_dir, "asset_classifiers.toml"))
 
     config.ASSET_CLF_MATCHERS = [
@@ -90,13 +91,13 @@ def _load_asset_clfs(config_dir):
     # Make sure the asset clfs do not contain any whitespace or question marks.
     clfs_with_whitespace = [clf for clf in config.ASSET_CLFS if re.search(r"[\s\?]", clf)]
     if clfs_with_whitespace:
-        logging.error("%s: Asset classifiers are not allowed to contain any whitespace or question marks. "
-                      "The following classifiers violate that rule: %s",
-                      toml_asset_clfs.error_prefix, _quote_and_join(clfs_with_whitespace))
+        log.error("%s: Asset classifiers are not allowed to contain any whitespace or question marks. "
+                  "The following classifiers violate that rule: %s",
+                  toml_asset_clfs.error_prefix, _quote_and_join(clfs_with_whitespace))
         sys.exit()
 
 
-def _load_projects(config_dir):
+def _load_projects():
     config.PROJECTS = {}
 
     toml_available_templates = TomlDict.load(os.path.join(config_dir, "project_templates.toml"))
@@ -114,16 +115,16 @@ def _load_projects(config_dir):
             featured_asset_type_matchers = [AssetTypeMatcher(pattern) for pattern
                                             in toml_project.opt("featured_asset_types", list, fallback=[])]
         except ValueError as e:
-            logging.error("%s: Error while parsing featured asset types: %s",
-                          toml_project.error_prefix, e)
+            log.error("%s: Error while parsing featured asset types: %s",
+                      toml_project.error_prefix, e)
             sys.exit()
 
         # Make sure the referenced excluded clfs are actually defined.
         undefined_asset_clfs = set(excluded_asset_clfs).difference(config.ASSET_CLFS)
         if undefined_asset_clfs:
-            logging.error("%s: These asset classifiers are referenced in value behind key 'excluded_asset_clfs' "
-                          "even though they have not been defined in 'asset_classifiers.toml': %s",
-                          toml_project.error_prefix, _quote_and_join(undefined_asset_clfs))
+            log.error("%s: These asset classifiers are referenced in value behind key 'excluded_asset_clfs' "
+                      "even though they have not been defined in 'asset_classifiers.toml': %s",
+                      toml_project.error_prefix, _quote_and_join(undefined_asset_clfs))
             sys.exit()
 
         # Parse locator.

@@ -1,12 +1,12 @@
 import logging
-import sys
 
 import urllib3
 from flask import Flask
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from socorepo import config
-from socorepo.config.loader import load_config
+from socorepo.config.loader import load_general_settings, load_remaining_config
+from socorepo.log import setup_logging
 
 
 def app_root_404(env, resp):
@@ -16,22 +16,21 @@ def app_root_404(env, resp):
 
 __version__ = "1.0.1"
 
-# Load config.
-load_config()
-
 # Disable unverified TLS certificate warnings.
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# Logging config
-log_handlers = [logging.StreamHandler(sys.stderr)]
-if config.EXTERNAL_CONFIG:
-    log_handlers.append(logging.FileHandler(config.LOGFILE))
-logging.basicConfig(level=logging.INFO,
-                    handlers=log_handlers)
+# Load the basic config, which we require for setting up logging.
+load_general_settings()
+
+setup_logging(config.LOG_DIR if config.EXTERNAL_CONFIG else None)
+
+# Now, we can load the remaining config. Any errors here will be logged to the logfile.
+load_remaining_config()
 
 if not config.EXTERNAL_CONFIG:
-    logging.warning("Running off internally stored default configuration files. This might not be what you want. "
-                    "See README for more information on how to use your own configuration.")
+    logging.getLogger("socorepo").warning(
+        "Running off internally stored default configuration files. This might not be what you want. "
+        "See README for more information on how to use your own configuration.")
 
 # Create the app.
 app = Flask(__name__)

@@ -7,21 +7,23 @@ from socorepo.locators.helpers import fetch_json
 from socorepo.locators.pypi import PyPI
 from socorepo.structs import ComponentPrototype, AssetPrototype
 
+log = logging.getLogger("socorepo")
+
 
 def fetch_component_prototypes(locator: PyPI) -> List[ComponentPrototype]:
     if not locator.verify_tls_certificate:
-        logging.warning("As specified in the repository settings, will now connect to the HTTPS server '%s' without"
-                        " verifying its TLS certificate.", locator.server)
+        log.warning("As specified in the repository settings, will now connect to the HTTPS server '%s' without"
+                    " verifying its TLS certificate.", locator.server)
 
     query_url = urljoin(locator.server, f"{locator.project}/json")
 
     try:
         json_resp = fetch_json(url=query_url, verify=locator.verify_tls_certificate)
     except IOError as e:
-        logging.error("Cannot fetch components. "
-                      "Are you sure that the server URL '%s' is correct "
-                      "and the project '%s' actually exists? Exception is: %s",
-                      locator.server, locator.project, e)
+        log.error("Cannot fetch components. "
+                  "Are you sure that the server URL '%s' is correct "
+                  "and the project '%s' actually exists? Exception is: %s",
+                  locator.server, locator.project, e)
         return []
 
     return [ComponentPrototype(version=version,

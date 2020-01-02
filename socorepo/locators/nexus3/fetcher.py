@@ -7,11 +7,13 @@ from socorepo.locators.helpers import fetch_json
 from socorepo.locators.nexus3 import Nexus3, Nexus3ComponentData
 from socorepo.structs import ComponentPrototype, AssetPrototype
 
+log = logging.getLogger("socorepo")
+
 
 def fetch_component_prototypes(locator: Nexus3) -> List[ComponentPrototype]:
     if not locator.verify_tls_certificate:
-        logging.warning("As specified in the repository settings, will now connect to the HTTPS server '%s' without"
-                        " verifying its TLS certificate.", locator.server)
+        log.warning("As specified in the repository settings, will now connect to the HTTPS server '%s' without"
+                    " verifying its TLS certificate.", locator.server)
 
     api_url = urljoin(locator.server,
                       "service/rest/v1/search"
@@ -30,10 +32,10 @@ def fetch_component_prototypes(locator: Nexus3) -> List[ComponentPrototype]:
         try:
             json_resp = fetch_json(url=query_url, verify=locator.verify_tls_certificate)
         except IOError as e:
-            logging.error("Cannot fetch components. "
-                          "Are you sure that the server URL '%s' is correct "
-                          "and the repository '%s' actually exists? Exception is: %s",
-                          locator.server, locator.repository, e)
+            log.error("Cannot fetch components. "
+                      "Are you sure that the server URL '%s' is correct "
+                      "and the repository '%s' actually exists? Exception is: %s",
+                      locator.server, locator.repository, e)
             return []
 
         continuation_token = json_resp["continuationToken"]
