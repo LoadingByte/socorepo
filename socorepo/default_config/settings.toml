@@ -1,5 +1,5 @@
 # Path to the logfile folder. The path is relative to this settings file.
-log_dir = "../log/"
+log_dir = "../logs/"
 
 # The path under which the whole app can be accessed. Useful for reverse proxy setups.
 application_root = "/"
