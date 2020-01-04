@@ -8,7 +8,7 @@ from zipfile import ZipFile, ZIP_LZMA
 def setup_logging(log_dir):
     log_cfg = {
         "version": 1,
-        "disable_existing_loggers": True,
+        "disable_existing_loggers": False,
         "formatters": {
             "default": {
                 "format": "%(asctime)s %(name)-8s %(levelname)-8s %(message)s"
