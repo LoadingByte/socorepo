@@ -1,8 +1,9 @@
+import gzip
 import os
 import sys
 from logging.config import dictConfig
 from logging.handlers import RotatingFileHandler
-from zipfile import ZipFile, ZIP_LZMA
+from shutil import copyfileobj
 
 
 def setup_logging(log_dir):
@@ -60,6 +61,7 @@ def _logrot_namer(name):
 
 
 def _logrot_rotator(source, dest):
-    with ZipFile(dest, "w", ZIP_LZMA) as df:
-        df.write(source, os.path.basename(source))
+    with open(source, "rb") as fs:
+        with gzip.open(dest, "wb") as fd:
+            copyfileobj(fs, fd)
     os.remove(source)
