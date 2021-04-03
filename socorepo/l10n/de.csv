@@ -1,0 +1,39 @@
+internal_error=Aufgrund eines internen Fehlers kann der Server die Anfrage nicht bearbeiten.
+
+locator.source_type=Art der Quelle
+locator.github_tags.source_type=GitHub-Repository mit Versions-Tags
+locator.github_tags.repository=Repository
+locator.github_tags.tag_and_commit=Tag / Commit
+locator.nexus3.source_type=Nexus-3-Repository
+locator.nexus3.repository=Repository
+locator.nexus3.component_coordinates=Komponentenkoordinaten
+locator.pypi.source_type=PyPI Package Index
+locator.pypi.server=PyPI-Server
+locator.pypi.project=PyPI-Projekt
+
+layout.you_are_here=Sie sind hier:
+layout.view_in_api=In API öffnen
+
+project_list.title=Projekte
+
+project.qualifier=Kennzeichnung
+project.version=Version
+project.more=Mehr
+project.highlight_components.1=Herausgestellte Komponente
+project.highlight_components.2=Herausgestellte Komponenten
+project.latest_stable=Neuste stabile Version (empfohlen)
+project.latest_experimental=Neuste experimentelle Version
+project.all_components=Alle Komponenten
+project.filter_version=Version (beginnt mit):
+project.filter_qualifier=Kennzeichnung:
+project.filter=Filtern
+project.no_matching_components=Es gibt keine Komponenten, die dem aktuellen Filter entsprechen :(
+
+component.comes_with_assets=Diese Komponente enthält die folgenden, herunterladbaren Dateien:
+component.asset_type=Dateityp
+component.asset_filename=Dateiname
+component.asset_size=Größe
+component.asset_checksums=Prüfsummen
+component.download_asset=Herunterladen
+component.no_assets=Diese Komponente enthält keine Dateien. Das ist vermutlich ein Fehler und sollte nicht so sein :(
+component.sourced_from=Zusatzinformation: Diese Komponente und ihre Dateien stammen von hier:

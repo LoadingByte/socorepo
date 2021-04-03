@@ -10,29 +10,29 @@
 
 
 {% block breadcrumb %}
-    <a href="{{ url_for("project_list") }}">Projects</a>
+    <a href="{{ url_for("project_list") }}">{{ _("project_list.title") }}</a>
     &rightarrow; {{ project.label }}
 {% endblock %}
 
 
 {% block api_link %}
-    <a href="{{ url_for("api_component_list", project_id=project.id) }}" target="_blank">View in API</a>
+    {{ url_for("api_component_list", project_id=project.id) }}
 {% endblock %}
 
 
 {% block content %}
-    {% if project.description %}
-        <p>{{ project.description }}</p>
+    {% if project.descriptions %}
+        <p>{{ localized_of(project.descriptions) }}</p>
     {% endif %}
 
     {% if highlight_components|length != 0 %}
-        <h2>Highlight Component{{ "s" if highlight_components|length != 1 }}</h2>
+        <h2>{{ _("project.highlight_components." + highlight_components|length|string) }}</h2>
 
         <div id="highlight-container">
             {% for highlight_label, highlight_component in highlight_components %}
                 <div class="{{ highlight_component.qualifier.color }}">
                     <h3>{{ highlight_label }}</h3>
-                    Version {{ highlight_component.version }}<br/>
+                    {{ _("project.version") }} {{ highlight_component.version }}<br/>
                     {% for matcher in occurring_featured_asset_type_matchers %}
                         {# We expect this loop to run only once. #}
                         {% for asset in highlight_component.assets if asset.matcher_causing_featuring == matcher %}
@@ -43,14 +43,14 @@
                     {% endfor %}
                     <br/>
                     <a href="{{ url_for("component", project_id=project.id, version=highlight_component.version) }}">
-                        More
+                        {{ _("project.more") }}
                     </a>
                 </div>
             {% endfor %}
         </div>
     {% endif %}
 
-    <h2>All Components</h2>
+    <h2>{{ _("project.all_components") }}</h2>
 
     <form method="get">
         <div>{{ component_filter_form.version.label }} {{ component_filter_form.version }}</div>
@@ -63,8 +63,8 @@
             <table>
                 <thead>
                 <tr>
-                    <th>Qualifier</th>
-                    <th>Version</th>
+                    <th>{{ _("project.qualifier") }}</th>
+                    <th>{{ _("project.version") }}</th>
                 </tr>
                 </thead>
                 {% for component in components %}
@@ -73,7 +73,7 @@
                         <td>{{ component.version }}</td>
                         <td>
                             <a href="{{ url_for("component", project_id=project.id, version=component.version) }}">
-                                More
+                                {{ _("project.more") }}
                             </a>
                         </td>
                         {% for matcher in occurring_featured_asset_type_matchers %}
@@ -91,6 +91,6 @@
             </table>
         </div>
     {% else %}
-        <p>Sorry, but there don't seem to be any components matching your filters :(</p>
+        <p>{{ _("project.no_matching_components") }}</p>
     {% endif %}
 {% endblock %}

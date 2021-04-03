@@ -1,10 +1,11 @@
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import Union, List, Dict
 from urllib.parse import urljoin
 
 from markupsafe import Markup
 
 from socorepo.config import TomlDict
+from socorepo.l10n import _
 from socorepo.locators.helpers import ensure_trailing_slash
 from socorepo.structs import Locator, ComponentPrototype, Component
 
@@ -19,13 +20,13 @@ class PyPI(Locator):
         from . import fetcher  # avoid cyclic dependencies
         return fetcher.fetch_component_prototypes(self)
 
-    def component_info_table(self, component: Component) -> Dict[str, Markup]:
+    def component_info_table(self, component: Component) -> Dict[str, Union[str, Markup]]:
         project_url = urljoin(self.server, self.project)
 
         return {
-            "Component host": Markup("PyPI package index"),
-            "PyPI server": Markup(f'<a href="{self.server}" target="_blank">{self.server}</a>'),
-            "PyPI project": Markup(f'<a href="{project_url}" target="_blank">{self.project}</a>')
+            _("locator.source_type"): _("locator.pypi.source_type"),
+            _("locator.pypi.server"): Markup(f'<a href="{self.server}" target="_blank">{self.server}</a>'),
+            _("locator.pypi.project"): Markup(f'<a href="{project_url}" target="_blank">{self.project}</a>')
         }
 
 

@@ -32,10 +32,30 @@ def load_general_settings():
     config.APPEARANCE_HEADING = toml_settings.req("appearance.heading", str)
     config.APPEARANCE_FAVICON_PATH = os.path.join(config_dir, toml_settings.req("appearance.favicon", str))
 
-    with open(os.path.join(config_dir, toml_settings.req("appearance.homepage", str)), "r") as f:
-        config.APPEARANCE_HOMEPAGE = Markup(f.read())
-    with open(os.path.join(config_dir, toml_settings.req("appearance.footer", str)), "r") as f:
-        config.APPEARANCE_FOOTER = Markup(f.read())
+    config.APPEARANCE_HOMEPAGES = _load_one_markup_file_per_lang(toml_settings.req("appearance.homepage", str))
+    config.APPEARANCE_FOOTERS = _load_one_markup_file_per_lang(toml_settings.req("appearance.footer", str))
+
+
+def _load_one_markup_file_per_lang(root_file):
+    dir_ = os.path.dirname(os.path.join(config_dir, root_file))
+
+    prefix = os.path.basename(root_file)
+    if "." in prefix:
+        prefix = prefix[:prefix.rindex(".")]
+
+    per_lang = {}
+    for filename in os.listdir(dir_):
+        if filename.startswith(prefix):
+            lang = filename[len(prefix):]
+            if "." in lang:
+                lang = lang[:lang.rindex(".")]
+            lang = lang[1:]  # remove _ between prefix and language if it exists
+            with open(os.path.join(dir_, filename), "r") as f:
+                per_lang[lang] = Markup(f.read())
+    if "" not in per_lang:
+        log.error("Must supply a default '%s' file without a language suffix, used when no lang matches.", root_file)
+        sys.exit()
+    return per_lang
 
 
 def load_remaining_config():
@@ -110,6 +130,16 @@ def _load_projects():
         # Recursively resolve included templates.
         toml_project.apply_templates(toml_available_templates)
 
+        descriptions = {}
+        for key in toml_project:
+            if key.startswith("description"):
+                lang = key[len("description_"):]
+                descriptions[lang] = Markup(toml_project.req(key, str))
+        if descriptions and "" not in descriptions:
+            log.error("%s: Must supply a default description without a language suffix, used when no lang matches.",
+                      toml_project.error_prefix)
+            sys.exit()
+
         excluded_asset_clfs = toml_project.opt("excluded_asset_clfs", list, fallback=[])
 
         try:
@@ -137,7 +167,7 @@ def _load_projects():
         project = Project(
             id=project_id,
             label=toml_project.req("label", str),
-            description=toml_project.opt("description", str, apply=Markup),
+            descriptions=descriptions,
             excluded_asset_clfs=excluded_asset_clfs,
             featured_asset_type_matchers=featured_asset_type_matchers,
             locator=locator

@@ -1,13 +1,14 @@
 import os
 from itertools import dropwhile
 
-from flask import request, url_for, send_file, render_template, jsonify, redirect, abort
+from flask import request, url_for, send_file, render_template, jsonify, redirect, abort, make_response
 from werkzeug.exceptions import HTTPException
 from werkzeug.http import HTTP_STATUS_CODES
 
 from socorepo import app, config
 from socorepo.cache import component_cache
 from socorepo.forms import create_component_filter_form
+from socorepo.l10n import msg_lang, _, localized_of
 
 
 @app.context_processor
@@ -16,7 +17,10 @@ def global_context_vars():
         "bare": config.APPEARANCE_BARE,
         "global_title": config.APPEARANCE_TITLE,
         "heading": config.APPEARANCE_HEADING,
-        "footer": config.APPEARANCE_FOOTER
+        "footer": localized_of(config.APPEARANCE_FOOTERS),
+        "msg_lang": msg_lang(),
+        "_": _,
+        "localized_of": localized_of
     }
 
 
@@ -27,7 +31,7 @@ def error(e):
         error_desc = e.description
     else:
         error_code = 500
-        error_desc = "The server encountered an internal error and was unable to complete your request."
+        error_desc = _("internal_error")
         app.log_exception(e)
 
     error_name = HTTP_STATUS_CODES.get(error_code, "Unknown Error")
@@ -42,7 +46,12 @@ def favicon():
 
 @app.route("/")
 def project_list():
-    return render_template("project_list.html", homepage=config.APPEARANCE_HOMEPAGE, projects=config.PROJECTS.values())
+    resp = render_template("project_list.html", homepage=localized_of(config.APPEARANCE_HOMEPAGES),
+                           projects=config.PROJECTS.values())
+    if config.APPEARANCE_BARE:
+        resp = make_response(resp)
+        resp.headers["Socorepo-Language"] = msg_lang()
+    return resp
 
 
 @app.route("/<project_id>/")
@@ -57,11 +66,10 @@ def project(project_id):
     highlight_components = []
     latest_stable = next(dropwhile(lambda c: not c.qualifier.stable, components), None)
     if latest_stable:
-        highlight_components.append(("Latest stable (recommended)", latest_stable))
+        highlight_components.append((_("project.latest_stable"), latest_stable))
     latest_experimental = next(iter(components), None)
     if latest_experimental and not latest_experimental.qualifier.stable:
-        label = "Latest experimental"
-        highlight_components.append((label, latest_experimental))
+        highlight_components.append((_("project.latest_experimental"), latest_experimental))
 
     # Construct filter form.
     available_qualifiers = sorted(set(comp.qualifier for comp in components))
@@ -88,6 +96,7 @@ def project(project_id):
                            occurring_featured_asset_type_matchers=occurring_featured_asset_type_matchers)
     if config.APPEARANCE_BARE:
         resp = make_response(resp)
+        resp.headers["Socorepo-Language"] = msg_lang()
         resp.headers["Socorepo-Project-Label"] = proj.label
     return resp
 
@@ -109,6 +118,7 @@ def component(project_id, version):
                            has_file_size_column=has_file_size_column, has_checksums_column=has_checksums_column)
     if config.APPEARANCE_BARE:
         resp = make_response(resp)
+        resp.headers["Socorepo-Language"] = msg_lang()
         resp.headers["Socorepo-Project-Label"] = proj.label
         resp.headers["Socorepo-Component-Version"] = comp.version
         resp.headers["Socorepo-Component-Qualifier"] = comp.qualifier.name

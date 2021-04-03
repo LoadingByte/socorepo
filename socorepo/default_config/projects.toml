@@ -16,6 +16,13 @@ software component listings from a variety of different sources and presents the
 to end users.<br/><br/>
 For more information, please refer to the <a href="https://github.com/LoadingByte/socorepo" target="_blank">GitHub page</a>.
 """
+# OPTIONAL: Provide the description in languages other than the default one by using a language suffix, e.g., "_de".
+description_de = """
+Socorepo, der SOftware COmponent REPOsitory exPOser, ist eine leichtgewichtige Python-Webapplikation, die Kataloge für
+Softwarekomponenten aus verschiedenen Quellen sammelt und auf einer intuitiven Seite für Endnutzer zum Herunterladen
+anbietet.<br/><br/>
+Für weitere Informationen, siehe die <a href="https://github.com/LoadingByte/socorepo" target="_blank">GitHub-Seite</a>.
+"""
 # The mechanism that pulls software component listings from somewhere and parses them.
 # In this case, the GitHub tags locator fetches all tags/releases from the specified GitHub repository
 # and exposes them as versions of the project.

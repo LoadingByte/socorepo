@@ -7,6 +7,7 @@ from urllib.parse import urljoin
 from markupsafe import Markup
 
 from socorepo.config.toml_dict import TomlDict
+from socorepo.l10n import _
 from socorepo.structs import Locator, ComponentPrototype, Component
 
 
@@ -20,19 +21,19 @@ class GitHubTags(Locator):
         from . import fetcher  # avoid cyclic dependencies
         return fetcher.fetch_component_prototypes(self)
 
-    def component_info_table(self, component: Component) -> Dict[str, Markup]:
+    def component_info_table(self, component: Component) -> Dict[str, Union[str, Markup]]:
         owner_url = urljoin("https://github.com", self.owner)
         repository_url = owner_url + "/" + self.repository
         tag_url = repository_url + "/releases/tag/" + component.version
         commit_url = repository_url + "/commit/" + component.extra_data.commit
 
         return {
-            "Component host": Markup("GitHub repository with version tags"),
-            "Repository": Markup(
+            _("locator.source_type"): _("locator.github_tags.source_type"),
+            _("locator.github_tags.repository"): Markup(
                 f'<a href="{owner_url}" target="_blank">{self.owner}</a> / '
                 f'<a href="{repository_url}" target="_blank">{self.repository}</a>',
             ),
-            "Tag / Commit": Markup(
+            _("locator.github_tags.tag_and_commit"): Markup(
                 f'<a href="{tag_url}" target="_blank">{component.version}</a> / '
                 f'<a href="{commit_url}" target="_blank">{component.extra_data.commit:.7}</a>'
             )

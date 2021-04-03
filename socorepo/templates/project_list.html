@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 
-{% block title %}Projects{% endblock %}
+{% block title %}{{ _("project_list.title") }}{% endblock %}
 
 
 {% block head %}
@@ -9,11 +9,11 @@
 {% endblock %}
 
 
-{% block breadcrumb %}Projects{% endblock %}
+{% block breadcrumb %}{{ _("project_list.title") }}{% endblock %}
 
 
 {% block api_link %}
-    <a href="{{ url_for("api_project_list") }}" target="_blank">View in API</a>
+    {{ url_for("api_project_list") }}
 {% endblock %}
 
 

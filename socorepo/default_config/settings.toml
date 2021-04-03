@@ -24,7 +24,11 @@ heading = "Socorepo"
 favicon = "favicon-loadingbyte.png"
 # File path to an HTML snippet that is embedded at the top of the homepage.
 # The path is relative to this settings file.
+# For supporting languages apart from the default one, the folder will be scanned for files
+# with a language suffix, e.g., "homepage_de.html".
 homepage = "homepage.html"
 # Another HTML snippet that is embedded in the footer area of every page.
 # The path is relative to this settings file.
+# For supporting languages apart from the default one, the folder will be scanned for files
+# with a language suffix, e.g., "footer_de.html".
 footer = "footer.html"

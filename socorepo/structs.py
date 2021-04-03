@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Optional, List, Dict, Pattern
+from typing import Any, Union, Optional, List, Dict, Pattern
 
 from markupsafe import Markup
 
@@ -16,7 +16,7 @@ from markupsafe import Markup
 class Project:
     id: str
     label: str
-    description: Optional[Markup]
+    descriptions: Dict[str, Markup]
     excluded_asset_clfs: List[str]
     featured_asset_type_matchers: List[AssetTypeMatcher]
     locator: Locator
@@ -27,7 +27,7 @@ class Locator(ABC):
     def fetch_component_prototypes(self) -> List[ComponentPrototype]:
         raise NotImplementedError
 
-    def component_info_table(self, component: Component) -> Dict[str, Markup]:
+    def component_info_table(self, component: Component) -> Dict[str, Union[str, Markup]]:
         raise NotImplementedError
 
 

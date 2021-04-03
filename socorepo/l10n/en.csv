@@ -1,0 +1,39 @@
+internal_error=The server encountered an internal error and was unable to complete your request.
+
+locator.source_type=Source Type
+locator.github_tags.source_type=GitHub Repository with Version Tags
+locator.github_tags.repository=Repository
+locator.github_tags.tag_and_commit=Tag / Commit
+locator.nexus3.source_type=Nexus 3 Repository
+locator.nexus3.repository=Repository
+locator.nexus3.component_coordinates=Component Coordinates
+locator.pypi.source_type=PyPI Package Index
+locator.pypi.server=PyPI Server
+locator.pypi.project=PyPI Project
+
+layout.you_are_here=You are here:
+layout.view_in_api=View in API
+
+project_list.title=Projects
+
+project.qualifier=Qualifier
+project.version=Version
+project.more=More
+project.highlight_components.1=Highlight Component
+project.highlight_components.2=Highlight Components
+project.latest_stable=Latest Stable (Recommended)
+project.latest_experimental=Latest Experimental
+project.all_components=All Components
+project.filter_version=Version (starts with):
+project.filter_qualifier=Qualifier:
+project.filter=Filter
+project.no_matching_components=Sorry, but there don't seem to be any components matching your filters :(
+
+component.comes_with_assets=This component comes with the following assets, i.e., downloadable files:
+component.asset_type=Asset Type
+component.asset_filename=Filename
+component.asset_size=Size
+component.asset_checksums=Checksums
+component.download_asset=Download
+component.no_assets=Sorry, but this component doesn't have any assets. This is probably an error and not supposed to be that way :(
+component.sourced_from=For your information, this component and its associated assets are sourced from here:

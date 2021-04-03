@@ -1,10 +1,11 @@
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import Union, List, Dict
 from urllib.parse import urljoin
 
 from markupsafe import Markup
 
 from socorepo.config.toml_dict import TomlDict
+from socorepo.l10n import _
 from socorepo.locators.helpers import ensure_trailing_slash
 from socorepo.structs import Locator, ComponentPrototype, Component
 
@@ -21,7 +22,7 @@ class Nexus3(Locator):
         from . import fetcher  # avoid cyclic dependencies
         return fetcher.fetch_component_prototypes(self)
 
-    def component_info_table(self, component: Component) -> Dict[str, Markup]:
+    def component_info_table(self, component: Component) -> Dict[str, Union[str, Markup]]:
         repository_url = urljoin(self.server, "#browse/browse:" + self.repository)
 
         comp_url = urljoin(self.server, "#browse/search/custom=")
@@ -36,12 +37,12 @@ class Nexus3(Locator):
         coord_markup += f'<a href="{comp_url}" target="_blank">{component.version}</a>'
 
         return {
-            "Component host": Markup("Nexus 3 repository"),
-            "Repository": Markup(
+            _("locator.source_type"): _("locator.nexus3.source_type"),
+            _("locator.nexus3.repository"): Markup(
                 f'<a href="{self.server}" target="_blank">{self.server}</a> &rightarrow; '
                 f'<a href="{repository_url}" target="_blank">{self.repository}</a>'
             ),
-            "Component coordinates": Markup(coord_markup)
+            _("locator.nexus3.component_coordinates"): Markup(coord_markup)
         }
 
 

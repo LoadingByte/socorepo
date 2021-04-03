@@ -1,6 +1,6 @@
 {% if bare %}{{ self.content() }}{% else -%}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ msg_lang }}">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -20,8 +20,10 @@
             <h1>{{ self.title() }}</h1>
         {% endblock %}
         <nav>
-            <span>You are here: {% block breadcrumb %}{% endblock %}</span>
-            <span style="float: right;">{% block api_link %}{% endblock %}</span>
+            <span>{{ _("layout.you_are_here") }} {% block breadcrumb %}{% endblock %}</span>
+            <a href="{% block api_link %}{% endblock %}" target="_blank" style="float: right;">
+                {{ _("layout.view_in_api") }}
+            </a>
         </nav>
         {% block content %}{% endblock %}
     </main>
