@@ -27,6 +27,7 @@ def load_general_settings():
     config.APPLICATION_ROOT = toml_settings.req("application_root", str)
     config.FETCH_INTERVAL = toml_settings.req("fetch_interval", int)
 
+    config.APPEARANCE_BARE = toml_settings.req("appearance.bare", bool)
     config.APPEARANCE_TITLE = toml_settings.req("appearance.title", str)
     config.APPEARANCE_HEADING = toml_settings.req("appearance.heading", str)
     config.APPEARANCE_FAVICON_PATH = os.path.join(config_dir, toml_settings.req("appearance.favicon", str))

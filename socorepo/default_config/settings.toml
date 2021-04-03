@@ -10,6 +10,11 @@ fetch_interval = 3600
 
 [appearance]
 
+# When this is true, only the content of each page is delivered, without the master layout,
+# heading, and breadcrumb, but with additional HTTP headers carrying some metadata.
+# This can be useful when embedding Socorepo pages into other pages.
+bare = false
+
 # This title is put into the <title> tag of the web page.
 title = "Socorepo"
 # This text is shown in the header of the web page.

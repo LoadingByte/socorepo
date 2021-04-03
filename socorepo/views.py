@@ -13,6 +13,7 @@ from socorepo.forms import create_component_filter_form
 @app.context_processor
 def global_context_vars():
     return {
+        "bare": config.APPEARANCE_BARE,
         "global_title": config.APPEARANCE_TITLE,
         "heading": config.APPEARANCE_HEADING,
         "footer": config.APPEARANCE_FOOTER
@@ -82,9 +83,13 @@ def project(project_id):
     # ... and sort them by the order they are referenced in the project's configuration.
     occurring_featured_asset_type_matchers.sort(key=lambda clfs: proj.featured_asset_type_matchers.index(clfs))
 
-    return render_template("project.html", component_filter_form=comp_filter_form, project=proj,
+    resp = render_template("project.html", component_filter_form=comp_filter_form, project=proj,
                            components=components, highlight_components=highlight_components,
                            occurring_featured_asset_type_matchers=occurring_featured_asset_type_matchers)
+    if config.APPEARANCE_BARE:
+        resp = make_response(resp)
+        resp.headers["Socorepo-Project-Label"] = proj.label
+    return resp
 
 
 @app.route("/<project_id>/<version>")
@@ -100,8 +105,14 @@ def component(project_id, version):
     has_file_size_column = any(asset.file_size for asset in comp.assets)
     has_checksums_column = any(asset.checksums for asset in comp.assets)
 
-    return render_template("component.html", project=proj, component=comp, component_info_table=comp_info_table,
+    resp = render_template("component.html", project=proj, component=comp, component_info_table=comp_info_table,
                            has_file_size_column=has_file_size_column, has_checksums_column=has_checksums_column)
+    if config.APPEARANCE_BARE:
+        resp = make_response(resp)
+        resp.headers["Socorepo-Project-Label"] = proj.label
+        resp.headers["Socorepo-Component-Version"] = comp.version
+        resp.headers["Socorepo-Component-Qualifier"] = comp.qualifier.name
+    return resp
 
 
 # ===========
