@@ -23,6 +23,7 @@ config_dir = os.path.abspath(os.environ["SOCOREPO_CONFIG_DIR"] if config.EXTERNA
 def load_general_settings():
     toml_settings = TomlDict.load(os.path.join(config_dir, "settings.toml"))
 
+    config.CONFIGURE_LOGGING = toml_settings.req("configure_logging", bool)
     config.LOG_DIR = os.path.join(config_dir, toml_settings.req("log_dir", str))
     config.APPLICATION_ROOT = toml_settings.req("application_root", str)
     config.FETCH_INTERVAL = toml_settings.req("fetch_interval", int)

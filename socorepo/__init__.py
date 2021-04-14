@@ -22,7 +22,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # Load the basic config, which we require for setting up logging.
 load_general_settings()
 
-setup_logging(config.LOG_DIR if config.EXTERNAL_CONFIG else None)
+if config.CONFIGURE_LOGGING:
+    setup_logging(config.LOG_DIR if config.EXTERNAL_CONFIG else None)
 
 # Now, we can load the remaining config. Any errors here will be logged to the logfile.
 load_remaining_config()

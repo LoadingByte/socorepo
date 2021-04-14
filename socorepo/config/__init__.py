@@ -7,6 +7,7 @@ from socorepo.structs import Project, VersionQualifier, AssetClfMatcher
 
 EXTERNAL_CONFIG: bool
 
+CONFIGURE_LOGGING: bool
 LOG_DIR: str
 APPLICATION_ROOT: str
 FETCH_INTERVAL: int
