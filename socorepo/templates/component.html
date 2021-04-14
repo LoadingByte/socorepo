@@ -1,18 +1,11 @@
 {% extends "layout.html" %}
 
 
-{% block title %}{{ project.label }} &middot; {{ component.version }}{% endblock %}
+{% block title %}{{ project.label }} &middot; {{ component.qualifier.name }} {{ component.version }}{% endblock %}
 
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="component.css") }}"/>
-{% endblock %}
-
-
-{% block headline %}
-    <h1 class="{{ component.qualifier.color }}">
-        {{ self.title() }} &middot; {{ component.qualifier.name }}
-    </h1>
 {% endblock %}
 
 

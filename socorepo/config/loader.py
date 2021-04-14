@@ -17,7 +17,7 @@ log = logging.getLogger("socorepo")
 # Determine the config dir. Make the path absolute to avoid relative path confusion.
 config.EXTERNAL_CONFIG = "SOCOREPO_CONFIG_DIR" in os.environ
 config_dir = os.path.abspath(os.environ["SOCOREPO_CONFIG_DIR"] if config.EXTERNAL_CONFIG
-                             else os.path.join(os.path.dirname(__file__), "../default_config"))
+                             else os.path.join(os.path.dirname(__file__), "..", "default_config"))
 
 
 def load_general_settings():
@@ -111,7 +111,7 @@ def _load_asset_clfs():
     config.ASSET_CLFS = [matcher.clf for matcher in config.ASSET_CLF_MATCHERS]
 
     # Make sure the asset clfs do not contain any whitespace or question marks.
-    clfs_with_whitespace = [clf for clf in config.ASSET_CLFS if re.search(r"[\s\?]", clf)]
+    clfs_with_whitespace = [clf for clf in config.ASSET_CLFS if re.search(r"[\s?]", clf)]
     if clfs_with_whitespace:
         log.error("%s: Asset classifiers are not allowed to contain any whitespace or question marks. "
                   "The following classifiers violate that rule: %s",

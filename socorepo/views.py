@@ -89,7 +89,7 @@ def project(project_id):
             if asset.featured and asset.matcher_causing_featuring not in occurring_featured_asset_type_matchers:
                 occurring_featured_asset_type_matchers.append(asset.matcher_causing_featuring)
     # ... and sort them by the order they are referenced in the project's configuration.
-    occurring_featured_asset_type_matchers.sort(key=lambda clfs: proj.featured_asset_type_matchers.index(clfs))
+    occurring_featured_asset_type_matchers.sort(key=lambda matcher: proj.featured_asset_type_matchers.index(matcher))
 
     resp = render_template("project.html", component_filter_form=comp_filter_form, project=proj,
                            components=components, highlight_components=highlight_components,
