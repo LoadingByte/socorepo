@@ -14,7 +14,7 @@ def app_root_404(env, resp):
     return [b"404 The application root has been reconfigured."]
 
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 # Disable unverified TLS certificate warnings.
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
