@@ -70,6 +70,10 @@ class TomlDict:
             if len(self._dict["__templates__"]) == 0:
                 del self._dict["__templates__"]
 
+        for k, v in self._dict.items():
+            if isinstance(v, dict):
+                self.sub(k).apply_templates(available_templates)
+
     @property
     def error_prefix(self):
         loc = f"In config file '{self._filename}'"
