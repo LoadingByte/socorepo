@@ -26,6 +26,7 @@ project.latest_experimental=Neuste experimentelle Version
 project.all_components=Alle Komponenten
 project.filter_version=Version (beginnt mit):
 project.filter_qualifier=Kennzeichnung:
+project.filter_qualifier_any=Jede
 project.filter=Filtern
 project.no_matching_components=Es gibt keine Komponenten, die dem aktuellen Filter entsprechen :(
 

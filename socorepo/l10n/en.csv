@@ -26,6 +26,7 @@ project.latest_experimental=Latest Experimental
 project.all_components=All Components
 project.filter_version=Version (starts with):
 project.filter_qualifier=Qualifier:
+project.filter_qualifier_any=Any
 project.filter=Filter
 project.no_matching_components=Sorry, but there don't seem to be any components matching your filters :(
 
