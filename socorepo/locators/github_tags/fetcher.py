@@ -91,4 +91,5 @@ def _parse_component(locator: GitHubTags, json_tag: dict, json_release: Optional
                                          checksums={}))
 
     return ComponentPrototype(version=version, assets=assets,
+                              locator_id=locator.id,
                               extra_data=GitHubTagsComponentData(commit=commit))

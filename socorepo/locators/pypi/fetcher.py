@@ -27,7 +27,8 @@ def fetch_component_prototypes(locator: PyPI) -> List[ComponentPrototype]:
         return []
 
     return [ComponentPrototype(version=version,
-                               assets=[_parse_asset(json_asset) for json_asset in json_assets])
+                               assets=[_parse_asset(json_asset) for json_asset in json_assets],
+                               locator_id=locator.id)
             for version, json_assets in json_resp["releases"].items()]
 
 

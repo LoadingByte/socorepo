@@ -15,9 +15,6 @@ def _fetch_all_components():
     new_component_cache = {}
 
     for project in config.PROJECTS.values():
-        log.info("Now fetching components for project '%s' using %s locator...",
-                 project.id, type(project.locator).__name__)
-
         try:
             new_component_cache[project.id] = fetch_components(project)
         except Exception:

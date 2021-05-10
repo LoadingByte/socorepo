@@ -30,7 +30,8 @@ class PyPI(Locator):
         }
 
 
-def parse_locator(toml_locator: TomlDict):
-    return PyPI(server=ensure_trailing_slash(toml_locator.req("server", str)),
+def parse_locator(locator_id: str, toml_locator: TomlDict):
+    return PyPI(id=locator_id,
+                server=ensure_trailing_slash(toml_locator.req("server", str)),
                 verify_tls_certificate=toml_locator.opt("verify_tls_certificate", bool, fallback=True),
                 project=toml_locator.req("project", str))

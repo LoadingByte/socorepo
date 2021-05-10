@@ -19,10 +19,13 @@ class Project:
     descriptions: Dict[str, Markup]
     excluded_asset_clfs: List[str]
     featured_asset_type_matchers: List[AssetTypeMatcher]
-    locator: Locator
+    locators: List[Locator]
 
 
+@dataclass(frozen=True)
 class Locator(ABC):
+    id: str
+
     @abstractmethod
     def fetch_component_prototypes(self) -> List[ComponentPrototype]:
         raise NotImplementedError
@@ -95,6 +98,7 @@ class AssetTypeMatcher:
 class ComponentPrototype:
     version: str
     assets: List[AssetPrototype]
+    locator_id: str
     extra_data: Any = None  # optional
 
 
@@ -114,7 +118,9 @@ class Component:
     version: str
     qualifier: VersionQualifier
     assets: List[Asset]
-    extra_data: Any = None  # optional
+    # Extra data for each locator by locator ID. Each locator which contributed to this component is present as a key,
+    # but the value may be null if there's no extra data for that locator.
+    extra_data: Dict[str, Any]
 
 
 @dataclass(frozen=True)

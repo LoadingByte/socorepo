@@ -25,7 +25,7 @@ class GitHubTags(Locator):
         owner_url = urljoin("https://github.com", self.owner)
         repository_url = owner_url + "/" + self.repository
         tag_url = repository_url + "/releases/tag/" + component.version
-        commit_url = repository_url + "/commit/" + component.extra_data.commit
+        commit_url = repository_url + "/commit/" + component.extra_data[self.id].commit
 
         return {
             _("locator.source_type"): _("locator.github_tags.source_type"),
@@ -35,7 +35,7 @@ class GitHubTags(Locator):
             ),
             _("locator.github_tags.tag_and_commit"): Markup(
                 f'<a href="{tag_url}" target="_blank">{component.version}</a> / '
-                f'<a href="{commit_url}" target="_blank">{component.extra_data.commit:.7}</a>'
+                f'<a href="{commit_url}" target="_blank">{component.extra_data[self.id].commit:.7}</a>'
             )
         }
 
@@ -62,7 +62,7 @@ class GitHubTagsComponentData:
     commit: str
 
 
-def parse_locator(toml_locator: TomlDict):
+def parse_locator(locator_id: str, toml_locator: TomlDict):
     auth = None
 
     if "login" in toml_locator:
@@ -74,6 +74,7 @@ def parse_locator(toml_locator: TomlDict):
         auth = GitHubOAuthApp(client_id=toml_locator.req("oauth_app.client_id", str),
                               client_secret=toml_locator.req("oauth_app.client_secret", str))
 
-    return GitHubTags(owner=toml_locator.req("owner", str),
+    return GitHubTags(id=locator_id,
+                      owner=toml_locator.req("owner", str),
                       repository=toml_locator.req("repository", str),
                       auth=auth)

@@ -33,7 +33,7 @@ class Nexus3(Locator):
             comp_url += "%20AND%20"
         comp_url += "name.raw%3D" + self.component_name
         coord_markup += f'<a href="{comp_url}" target="_blank">{self.component_name}</a> &rightarrow; '
-        comp_url += "%20AND%20version%3D" + component.extra_data.nexus_version
+        comp_url += "%20AND%20version%3D" + component.extra_data[self.id].nexus_version
         coord_markup += f'<a href="{comp_url}" target="_blank">{component.version}</a>'
 
         return {
@@ -51,8 +51,9 @@ class Nexus3ComponentData:
     nexus_version: str
 
 
-def parse_locator(toml_locator: TomlDict):
-    return Nexus3(server=ensure_trailing_slash(toml_locator.req("server", str)),
+def parse_locator(locator_id: str, toml_locator: TomlDict):
+    return Nexus3(id=locator_id,
+                  server=ensure_trailing_slash(toml_locator.req("server", str)),
                   verify_tls_certificate=toml_locator.opt("verify_tls_certificate", bool, fallback=True),
                   repository=toml_locator.req("repository", str),
                   component_group=toml_locator.opt("component_group", str),

@@ -81,11 +81,16 @@
     <p style="margin-top: 3em;">{{ _("component.sourced_from") }}</p>
     <div class="table-wrapper">
         <table>
-            {% for row_th, row_td in component_info_table.items() %}
-                <tr>
-                    <th>{{ row_th }}</th>
-                    <td>{{ row_td }}</td>
-                </tr>
+            {% for info_table in component_info_tables %}
+                {% if not loop.first %}
+                    <tr style="background: none; height: 0.8em;"></tr>
+                {% endif %}
+                {% for row_th, row_td in info_table.items() %}
+                    <tr>
+                        <th>{{ row_th }}</th>
+                        <td>{{ row_td }}</td>
+                    </tr>
+                {% endfor %}
             {% endfor %}
         </table>
     </div>

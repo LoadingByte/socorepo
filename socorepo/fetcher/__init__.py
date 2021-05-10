@@ -10,13 +10,24 @@ log = logging.getLogger("socorepo")
 
 
 def fetch_components(project: Project):
-    comp_proto_list = project.locator.fetch_component_prototypes()
+    log.info("Now fetching components for project '%s'...", project.id)
+    comp_proto_list = []
+    for locator in project.locators:
+        log.info("Now fetching components for project '%s' using %s locator '%s'...",
+                 project.id, type(locator).__name__, locator.id)
+        comp_proto_list += locator.fetch_component_prototypes()
     return _new_component_dict(project, comp_proto_list)
 
 
 def _new_component_dict(project: Project, comp_proto_list: List[ComponentPrototype]) -> Dict[str, Component]:
-    # Convert the component prototypes to actual components.
-    comp_list = [_new_component(project, comp_proto) for comp_proto in comp_proto_list]
+    # Group the component prototypes by version. This is necessary when multiple locators are used.
+    comp_proto_groups = {}
+    for comp_proto in comp_proto_list:
+        comp_proto_groups.setdefault(comp_proto.version, []).append(comp_proto)
+
+    # Convert the grouped component prototypes to actual components.
+    comp_list = [_new_component(project, version, comp_proto_group)
+                 for version, comp_proto_group in comp_proto_groups.items()]
 
     # Sort components in order of decreasing version.
     sorted_comp_list = sort_components_by_version(comp_list)
@@ -25,8 +36,9 @@ def _new_component_dict(project: Project, comp_proto_list: List[ComponentPrototy
     return OrderedDict([(comp.version, comp) for comp in sorted_comp_list])
 
 
-def _new_component(project: Project, comp_proto: ComponentPrototype) -> Component:
-    asset_protos = comp_proto.assets
+def _new_component(project: Project, version: str, comp_proto_group: List[ComponentPrototype]) -> Component:
+    # Collect all asset prototypes of all component prototypes in the group.
+    asset_protos = [asset for comp_proto in comp_proto_group for asset in comp_proto.assets]
 
     # Determine the type (i.e., a list of asset clfs) of each asset prototype.
     asset_types = {asset_proto: _determine_asset_type(project, asset_proto)
@@ -49,7 +61,7 @@ def _new_component(project: Project, comp_proto: ComponentPrototype) -> Componen
     asset_matchers = {}
     remaining_matchers = project.featured_asset_type_matchers.copy()
     for asset_proto in sorted_asset_protos:
-        matcher = _find_matching_matcher(project, remaining_matchers, comp_proto, asset_proto, asset_types[asset_proto])
+        matcher = _find_matching_matcher(project, remaining_matchers, version, asset_proto, asset_types[asset_proto])
         asset_matchers[asset_proto] = matcher
         if matcher is not None:
             remaining_matchers.remove(matcher)
@@ -58,10 +70,10 @@ def _new_component(project: Project, comp_proto: ComponentPrototype) -> Componen
     sorted_assets = [_new_asset(asset_proto, asset_types[asset_proto], asset_matchers[asset_proto])
                      for asset_proto in sorted_asset_protos]
 
-    return Component(version=comp_proto.version,
-                     qualifier=get_version_qualifier(comp_proto.version),
+    return Component(version=version,
+                     qualifier=get_version_qualifier(version),
                      assets=sorted_assets,
-                     extra_data=comp_proto.extra_data)
+                     extra_data={comp_proto.locator_id: comp_proto.extra_data for comp_proto in comp_proto_group})
 
 
 def _determine_asset_type(project: Project, asset_proto: AssetPrototype) -> AssetType:
@@ -71,7 +83,7 @@ def _determine_asset_type(project: Project, asset_proto: AssetPrototype) -> Asse
                       and matcher.clf not in project.excluded_asset_clfs])
 
 
-def _find_matching_matcher(project: Project, matchers: List[AssetTypeMatcher], comp_proto: ComponentPrototype,
+def _find_matching_matcher(project: Project, matchers: List[AssetTypeMatcher], version: str,
                            asset_proto: AssetPrototype, type_: AssetType) -> Optional[AssetTypeMatcher]:
     matching_matchers = [m for m in matchers if m.matches(type_)]
     if len(matching_matchers) > 1:
@@ -79,7 +91,7 @@ def _find_matching_matcher(project: Project, matchers: List[AssetTypeMatcher], c
                     "Asset with filename '%s' matches multiple featured asset types: %s. "
                     "This is discouraged. All but the first match will now be ignored. "
                     "Try to rewrite your featured asset types such that each asset only matches one of them.",
-                    project.id, comp_proto.version, asset_proto.filename,
+                    project.id, version, asset_proto.filename,
                     ", ".join(f"'{m.pattern}'" for m in matching_matchers))
     return next(iter(matching_matchers), None)
 

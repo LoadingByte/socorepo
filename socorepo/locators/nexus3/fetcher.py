@@ -39,12 +39,12 @@ def fetch_component_prototypes(locator: Nexus3) -> List[ComponentPrototype]:
             return []
 
         continuation_token = json_resp["continuationToken"]
-        components += [_parse_component(json_component) for json_component in json_resp["items"]]
+        components += [_parse_component(locator, json_component) for json_component in json_resp["items"]]
 
     return components
 
 
-def _parse_component(json_component: dict) -> ComponentPrototype:
+def _parse_component(locator: Nexus3, json_component: dict) -> ComponentPrototype:
     nexus_version = json_component["version"]
     version = nexus_version
 
@@ -61,6 +61,7 @@ def _parse_component(json_component: dict) -> ComponentPrototype:
               if _is_relevant_asset(json_asset)]
 
     return ComponentPrototype(version=version, assets=assets,
+                              locator_id=locator.id,
                               extra_data=Nexus3ComponentData(nexus_version=json_component["version"]))
 
 

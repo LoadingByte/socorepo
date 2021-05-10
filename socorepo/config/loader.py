@@ -159,10 +159,13 @@ def _load_projects():
                       toml_project.error_prefix, _quote_and_join(undefined_asset_clfs))
             sys.exit()
 
-        # Parse locator.
-        locator_type = toml_project.req("locator", str, choices=LOCATOR_PARSERS)
-        toml_locator = toml_project.sub(locator_type)
-        locator = LOCATOR_PARSERS[locator_type](toml_locator)
+        # Parse locators.
+        locators = []
+        for locator_id in toml_project.sub("locators"):
+            toml_locator = toml_project.sub(f"locators.{locator_id}")
+            locator_type = toml_locator.req("type", str, choices=LOCATOR_PARSERS)
+            locator = LOCATOR_PARSERS[locator_type](locator_id, toml_locator)
+            locators.append(locator)
 
         # Parse the rest of the project and register it to the config module.
         project = Project(
@@ -171,7 +174,7 @@ def _load_projects():
             descriptions=descriptions,
             excluded_asset_clfs=excluded_asset_clfs,
             featured_asset_type_matchers=featured_asset_type_matchers,
-            locator=locator
+            locators=locators
         )
         config.PROJECTS[project_id] = project
 

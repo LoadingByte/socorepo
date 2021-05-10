@@ -110,11 +110,11 @@ def component(project_id, version):
     proj = config.PROJECTS[project_id]
     comp = component_cache[project_id][version]
 
-    comp_info_table = proj.locator.component_info_table(comp)
+    comp_info_tables = [loc.component_info_table(comp) for loc in proj.locators if loc.id in comp.extra_data]
     has_file_size_column = any(asset.file_size for asset in comp.assets)
     has_checksums_column = any(asset.checksums for asset in comp.assets)
 
-    resp = render_template("component.html", project=proj, component=comp, component_info_table=comp_info_table,
+    resp = render_template("component.html", project=proj, component=comp, component_info_tables=comp_info_tables,
                            has_file_size_column=has_file_size_column, has_checksums_column=has_checksums_column)
     if config.APPEARANCE_BARE:
         resp = make_response(resp)
