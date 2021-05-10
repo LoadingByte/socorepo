@@ -4,7 +4,7 @@ Socorepo, the SOftware COmponent REPOsitory exPOser, is a lightweight Python web
 software component listings from a variety of different sources and presents them as intuitive download sites
 to end users.
 
-A production instance of the webapp is permanently hosted at https://loadingbyte.com/dl. Try it out!
+A production instance of the webapp is permanently embedded in https://loadingbyte.com, for example, at https://loadingbyte.com/socorepo/dl/. Try it out!
 
 ## Features
 
