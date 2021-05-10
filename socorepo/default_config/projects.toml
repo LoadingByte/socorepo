@@ -100,7 +100,7 @@ excluded_asset_clfs = [ "WHL" ]
 #
 # Let's look at the simple rules that govern whether a pattern P matches a given asset type T.
 # First of all, each classifier in T must match a classifier in P and vice-versa (THE ORDER IS IRRELEVANT).
-#   E.g., P="Sources ZIP" only matches T="Sources ZIP", but not T="Sources TGZ" or T="Sources JavaDoc ZIP".
+#   E.g., P="Sources ZIP" only matches T="Sources ZIP", but not T="Sources TAR.GZ" or T="Sources JavaDoc ZIP".
 # If, however, a classifier in P starts is preceded by a "?", it may, but doesn't have to have a counterpart in T.
 #   E.g., P="Py3.7 macOS 64-bit ?32-bit" matches T="Py3.7 macOS 64-bit 32-bit" and also T="Py3.7 macOS 64-bit",
 #   but not T="Py3.7 macOS 32-bit".

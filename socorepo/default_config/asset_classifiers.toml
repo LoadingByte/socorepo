@@ -39,10 +39,10 @@ UCS2 = '(?<![a-z])cp(2[0-7]|3[0-2])m(?![a-z])'
 
 
 # Operating systems
-Win = '(?<![a-z])win(?![a-z])|windows|\.exe$'
+Windows = '(?<![a-z])win(?![a-z])|windows|\.exe$|\.msi$'
 Cygwin = 'cygwin'
-macOS = 'macos|os.?x|darwin|\.app$'
-Linux = 'linux'
+macOS = 'macos|os.?x|darwin|\.dmg$|\.pkg$'
+Linux = 'linux|\.deb$|\.rpm$'
 FreeBSD = 'free.?bsd'
 OpenBSD = 'open.?bsd'
 NetBSD = 'net.?bsd'
@@ -68,8 +68,13 @@ Dev = '(?<![a-z])(dev|develop)(?![a-z])'
 
 # File types
 ZIP = '\.zip$'
-TGZ = '\.(tgz|tar\.gz)$'
+"TAR.GZ" = '\.(tgz|tar\.gz)$'
 EXE = '\.exe$'
+MSI = '\.msi$'
+DMG = '\.dmg'
+PKG = '\.pkg$'
+DEB = '\.deb$'
+RPM = '\.rpm$'
 JAR = '\.jar$'
 POM = '\.pom$'
 WHL = '\.whl$'
