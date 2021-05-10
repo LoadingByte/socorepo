@@ -10,5 +10,11 @@
 
 
 [official_pypi]
-locator = "pypi"
-pypi.server = "https://pypi.org/pypi/"
+[official_pypi.locators.pypi]
+type = "pypi"
+server = "https://pypi.org/pypi/"
+
+
+[loadingbyte_nexus]
+type = "nexus3"
+server = "https://repo.loadingbyte.com/"

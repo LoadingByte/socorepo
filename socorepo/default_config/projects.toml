@@ -23,57 +23,60 @@ Softwarekomponenten aus verschiedenen Quellen sammelt und auf einer intuitiven S
 anbietet.<br/><br/>
 Für weitere Informationen, siehe die <a href="https://github.com/LoadingByte/socorepo" target="_blank">GitHub-Seite</a>.
 """
-# The mechanism that pulls software component listings from somewhere and parses them.
-# In this case, the GitHub tags locator fetches all tags/releases from the specified GitHub repository
-# and exposes them as versions of the project.
+# A project can have arbitrarily many locators, which pull software component listings from somewhere and parse them.
+# Each locator has an arbitrary locator ID that is unique in the current project; in this case, it's "github".
+[socorepo.locators.github]
+# The mechanism that this locator uses for pulling listings; in this case, we define a GitHub tags locator that
+# fetches all tags/releases from the specified GitHub repository and exposes them as versions of the project.
 # For each version, it then provides the source code archives as well as any manually attached assets for download.
-locator = "github_tags"
-# What now follows are special properties unique to the specified locator.
-# They are prefixed with the name of the locator.
-# In this case, the GitHub tags locator requires the owner and name of the repository
-github_tags.owner = "LoadingByte"
-github_tags.repository = "socorepo"
+type = "github_tags"
+# What now follows are special properties unique to the specified locator type.
+# In this case, the GitHub tags locator type requires the owner and name of the repository
+owner = "LoadingByte"
+repository = "socorepo"
 # In order to increase the rate limit of the GitHub API or to access private repositories,
 # requests can OPTIONALLY be authenticated.
 # If you desire to do so, please choose EITHER username/password authentication ("login"),
 # authentication with an OAuth token ("oauth_token"),
 # or authentication with a client ID and client secret ("oauth_app").
-#github_tags.login.username = ""
-#github_tags.login.password = ""
-#github_tags.oauth_token = ""
-#github_tags.oauth_app.client_id = ""
-#github_tags.oauth_app.client_secret = ""
+#login.username = ""
+#login.password = ""
+#oauth_token = ""
+#oauth_app.client_id = ""
+#oauth_app.client_secret = ""
 
 
 [quarterbukkit]
 label = "QuarterBukkit"
-# The Nexus 3 locator fetches any components along with their assets from any Sonatype Nexus 3 instance.
+[quarterbukkit.locators.maven]
+# A Nexus 3 locator fetches all components along with their assets from a Sonatype Nexus 3 instance.
 # It should work for all kinds of Nexus 3 repositories, not just Maven ones (even though we haven't tested them all).
-locator = "nexus3"
+type = "nexus3"
 # Root URL of the Nexus 3 server.
-nexus3.server = "https://repo.loadingbyte.com/"
+server = "https://repo.loadingbyte.com/"
 # Name of the repository on the server which houses the components.
-nexus3.repository = "maven-public"
+repository = "maven-public"
 # OPTIONAL: If applicable, the group of your components.
 # For example, Maven components do have a group while PyPI ones don't.
-nexus3.component_group = "com.quartercode"
+component_group = "com.quartercode"
 # Name of your components.
-nexus3.component_name = "quarterbukkit-package"
+component_name = "quarterbukkit-package"
 
 
 [flask]
 label = "Flask"
-# The PyPI locator fetches releases from any PyPI server that exposes the JSON interface.
-locator = "pypi"
+[flask.locators.pypi]
+# A PyPI locator fetches releases from any PyPI server that exposes the JSON interface.
+type = "pypi"
 # URL of the PyPI server. The URL must be chosen such that the JSON interface is exposed at "<url>/<project>/json".
 # E.g., the official PyPI exposes the JSON interface at "https://pypi.org/pypi/<project>/json".
-pypi.server = "https://pypi.org/pypi/"
+server = "https://pypi.org/pypi/"
 # Name of the project on PyPI.
-pypi.project = "Flask"
+project = "Flask"
 # OPTIONAL: Whether to verify the SSL/TLS certificate provided by the server (default is true).
 # Beware of disabling this setting. Without proper verification, a man-in-the-middle could manipulate what is
 # fetched by Socorepo, replace download URLs and thereby distribute malware through your site!
-#pypi.verify_tls_certificate = true
+#verify_tls_certificate = true
 
 
 [numpy]
@@ -110,4 +113,34 @@ excluded_asset_clfs = [ "WHL" ]
 # Notably, by declaring an isolated "*", you can match any unexpected classifiers.
 #   E.g., P="Linux *" matches T="Linux 32-bit", "Py3.2 Linux", and so on, but no "Win 64-bit".
 featured_asset_types = [ "Sources ZIP", "Py3.7 macOS 64-bit ?32-bit", "Py3.6|Py3.5 Win 32-bit", "Py* Win 64-bit", "Linux *" ]
-pypi.project = "numpy"
+# In this example, the "official_pypi" template defines a locator with the ID "pypi".
+# However, the "project" property is not defined in the template because it's project-specific.
+# Hence, we define that property here.
+[numpy.locators.pypi]
+project = "numpy"
+
+
+[cinecred]
+label = "Cinecred"
+# OPTIONAL: The versions of fetched components will be sent through this list of regex substitutions.
+# Each substituion consists of a regex pattern and a replacement.
+# You can reference capture groups in the replacement, e.g., "\1" would reference the first capture group.
+# In this example, the substitution removes the "release" version suffix that APT and YUM packages carry around.
+# Only this way, the versions from the maven repo and the ones from the APT and YUM repos match up, and hence all
+# assets of the same Cinecred version will be listed under the same component.
+version_substitutions = [ { pattern = "-[0-9]+", repl = "" } ]
+# Note that this example demonstrates that you can indeed use multiple locators in the same project.
+[cinecred.locators.maven]
+# Here you can see that templates can be applied anywhere in the configuration tree, not only at the root of a project.
+__templates__ = [ "loadingbyte_nexus" ]
+repository = "maven-public"
+component_group = "com.loadingbyte"
+component_name = "cinecred"
+[cinecred.locators.apt]
+__templates__ = [ "loadingbyte_nexus" ]
+repository = "apt-releases"
+component_name = "cinecred"
+[cinecred.locators.yum]
+__templates__ = [ "loadingbyte_nexus" ]
+repository = "yum-releases"
+component_name = "cinecred"
