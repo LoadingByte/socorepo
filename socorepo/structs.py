@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Union, Optional, List, Dict, Pattern
+from typing import Any, Union, Optional, List, Tuple, Dict, Pattern
 
 from markupsafe import Markup
 
@@ -17,6 +17,7 @@ class Project:
     id: str
     label: str
     descriptions: Dict[str, Markup]
+    version_substitutions: List[Tuple[Pattern, str]]
     excluded_asset_clfs: List[str]
     featured_asset_type_matchers: List[AssetTypeMatcher]
     locators: List[Locator]

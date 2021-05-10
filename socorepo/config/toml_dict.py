@@ -27,14 +27,24 @@ class TomlDict:
 
     def sub(self, key: str, *, split_key: bool = True) -> TomlDict:
         try:
-            return self._sub(key.split(".") if split_key else [key])
+            key_arr = key.split(".") if split_key else [key]
+            return self._sub(key_arr)
+        except LookupError as e:
+            log.error(str(e))
+            sys.exit()
+
+    def sub_list(self, key: str, *, split_key: bool = True) -> List[TomlDict]:
+        try:
+            key_arr = key.split(".") if split_key else [key]
+            return self._sub(key_arr[:-1])._sub_list(key_arr[-1])
         except LookupError as e:
             log.error(str(e))
             sys.exit()
 
     def req(self, key: str, type_: Type, *, split_key: bool = True, choices: list = None):
         try:
-            return self._get(key, type_, split_key, choices)
+            key_arr = key.split(".") if split_key else [key]
+            return self._sub(key_arr[:-1])._get(key_arr[-1], type_, choices)
         except LookupError as e:
             log.error(str(e))
             sys.exit()
@@ -42,7 +52,8 @@ class TomlDict:
     def opt(self, key: str, type_: Type, *, split_key: bool = True, choices: list = None, apply: callable = None,
             fallback=None):
         try:
-            val = self._get(key, type_, split_key, choices)
+            key_arr = key.split(".") if split_key else [key]
+            val = self._sub(key_arr[:-1])._get(key_arr[-1], type_, choices)
             return apply(val) if apply else val
         except LookupError:
             return fallback
@@ -85,6 +96,9 @@ class TomlDict:
         return iter(self._dict)
 
     def _sub(self, key_arr: List[str]):
+        if len(key_arr) == 0:
+            return self
+
         # Check that the key exists.
         if key_arr[0] not in self._dict:
             raise LookupError(f"{self.error_prefix}: Expected key '{key_arr[0]}' is missing.")
@@ -99,20 +113,35 @@ class TomlDict:
         next_dict = TomlDict(filename=self._filename, dict_=val, prefix=self._prefix + [key_arr[0]])
         return next_dict if len(key_arr) == 1 else next_dict._sub(key_arr[1:])
 
-    def _get(self, key: str, type_: Type, split_key: bool, choices: list):
-        key_arr = key.split(".") if split_key else [key]
+    def _sub_list(self, key: str):
+        # Check that the key exists.
+        if key not in self._dict:
+            raise LookupError(f"{self.error_prefix}: Expected key '{key}' is missing.")
 
-        # This IF determines whether we've arrived at the last segment of the composite key.
-        if len(key_arr) == 1:  # Note that in this case: key == key_arr[0]
-            # Check that the key exists.
-            if key not in self._dict:
-                raise LookupError(f"{self.error_prefix}: Expected key '{key}' is missing.")
+        val = self._dict[key]
 
-            val = self._dict[key]
-            val = self._parse_and_check_value(key, type_, choices, val)
-            return val
-        else:
-            return self._sub(key_arr[:-1])._get(key_arr[-1], type_, False, choices)
+        # Check that the value is a list.
+        if not isinstance(val, list):
+            raise LookupError(f"{self.error_prefix}: Expected key '{key}' to be a list. "
+                              f"Found a value of type '{type(val).__name__}' instead.")
+
+        # Check that each element of the list is a dict and wrap these dicts in TomlDicts.
+        sub_dicts = []
+        for idx, elem in enumerate(val):
+            if not isinstance(elem, dict):
+                raise LookupError(f"{self.error_prefix}: Expected all elements in key '{key}' to be tables/dicts. "
+                                  f"Found a value of type '{type(elem).__name__}' at index {idx} instead.")
+            sub_dicts.append(TomlDict(filename=self._filename, dict_=elem, prefix=self._prefix + [key, str(idx)]))
+        return sub_dicts
+
+    def _get(self, key: str, type_: Type, choices: list):
+        # Check that the key exists.
+        if key not in self._dict:
+            raise LookupError(f"{self.error_prefix}: Expected key '{key}' is missing.")
+
+        val = self._dict[key]
+        val = self._parse_and_check_value(key, type_, choices, val)
+        return val
 
     def _parse_and_check_value(self, key: str, type_: type, choices: list, val):
         if type_ == Pattern:

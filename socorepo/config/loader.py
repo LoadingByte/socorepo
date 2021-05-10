@@ -141,6 +141,14 @@ def _load_projects():
                       toml_project.error_prefix)
             sys.exit()
 
+        # Parse optional version substitutions.
+        version_substitutions = []
+        if "version_substitutions" in toml_project:
+            for toml_version_sub in toml_project.sub_list("version_substitutions"):
+                pattern = toml_version_sub.req("pattern", Pattern)
+                repl = toml_version_sub.req("repl", str)
+                version_substitutions.append((pattern, repl))
+
         excluded_asset_clfs = toml_project.opt("excluded_asset_clfs", list, fallback=[])
 
         try:
@@ -172,6 +180,7 @@ def _load_projects():
             id=project_id,
             label=toml_project.req("label", str),
             descriptions=descriptions,
+            version_substitutions=version_substitutions,
             excluded_asset_clfs=excluded_asset_clfs,
             featured_asset_type_matchers=featured_asset_type_matchers,
             locators=locators

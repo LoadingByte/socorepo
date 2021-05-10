@@ -23,7 +23,11 @@ def _new_component_dict(project: Project, comp_proto_list: List[ComponentPrototy
     # Group the component prototypes by version. This is necessary when multiple locators are used.
     comp_proto_groups = {}
     for comp_proto in comp_proto_list:
-        comp_proto_groups.setdefault(comp_proto.version, []).append(comp_proto)
+        version = comp_proto.version
+        # Apply version substitutions if there are any.
+        for pattern, replacement in project.version_substitutions:
+            version = pattern.sub(replacement, version)
+        comp_proto_groups.setdefault(version, []).append(comp_proto)
 
     # Convert the grouped component prototypes to actual components.
     comp_list = [_new_component(project, version, comp_proto_group)
