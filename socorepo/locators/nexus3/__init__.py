@@ -25,13 +25,12 @@ class Nexus3(Locator):
     def component_info_table(self, component: Component) -> Dict[str, Union[str, Markup]]:
         repository_url = urljoin(self.server, "#browse/browse:" + self.repository)
 
-        comp_url = urljoin(self.server, "#browse/search/custom=")
+        comp_url = urljoin(self.server, "#browse/search/custom=repository_name%3D" + self.repository)
         coord_markup = ""
         if self.component_group:
-            comp_url += "group.raw%3D" + self.component_group
+            comp_url += "%20AND%20group.raw%3D" + self.component_group
             coord_markup += f'<a href="{comp_url}" target="_blank">{self.component_group}</a> &rightarrow; '
-            comp_url += "%20AND%20"
-        comp_url += "name.raw%3D" + self.component_name
+        comp_url += "%20AND%20name.raw%3D" + self.component_name
         coord_markup += f'<a href="{comp_url}" target="_blank">{self.component_name}</a> &rightarrow; '
         comp_url += "%20AND%20version%3D" + component.extra_data[self.id].nexus_version
         coord_markup += f'<a href="{comp_url}" target="_blank">{component.version}</a>'
