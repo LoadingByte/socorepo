@@ -79,8 +79,8 @@ def project(project_id):
         filter_version = comp_filter_form.version.data
         filter_qualifier = comp_filter_form.qualifier.data
         components = [comp for comp in components
-                      if comp.version.startswith(filter_version)
-                      and (filter_qualifier == "" or comp.qualifier.name == filter_qualifier)]
+                      if (not filter_version or comp.version.startswith(filter_version))
+                      and (not filter_qualifier or comp.qualifier.name == filter_qualifier)]
 
     # Get list of all featured asset type matchers which have actually matched an asset...
     occurring_featured_asset_type_matchers = []
