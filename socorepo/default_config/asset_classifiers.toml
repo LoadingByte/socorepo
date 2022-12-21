@@ -53,9 +53,9 @@ Solaris = 'solaris|sunos'
 # For Python cases, see also:
 # distutils.util.get_platform()
 # _osx_support.get_platform_osx()
-64-bit = '(?<![a-z])x86.64|x64|amd64|arm64|ppc64|fat64|fat3(?!\d)|(?<![a-z])intel(?![a-z])'
-32-bit = '(?<!\d)(32|86|386|686)(?!\d|.?64)|(?<![a-z])(arm|ppc|fat)(?![a-z]|.?64)|(?<![a-z])intel(?![a-z])'
-ARM = '(?<![a-z])arm(?![a-z])'
+64-bit = '(?<![a-z])x86.64|x64|amd64|arm64|aarch64|ppc64|fat64|fat3(?!\d)|(?<![a-z])intel(?![a-z])'
+32-bit = '(?<!\d)(32|86|386|686)(?!\d|.?64)|(?<![a-z])(arm|aarch|ppc|fat)(?![a-z]|.?64)|(?<![a-z])intel(?![a-z])'
+ARM = '(?<![a-z])(arm|aarch)(?![a-z])'
 PowerPC = '(?<![a-z])((ppc|fat)(?![a-z])|(fat3|fat64)(?!\d))'
 
 
