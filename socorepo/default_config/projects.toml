@@ -112,7 +112,7 @@ excluded_asset_clfs = [ "WHL" ]
 #   but not T="Win 64-bit" or T="Win 64-bit ARM".
 # Notably, by declaring an isolated "*", you can match any unexpected classifiers.
 #   E.g., P="Linux *" matches T="Linux 32-bit", "Py3.2 Linux", and so on, but no "Win 64-bit".
-featured_asset_types = [ "Sources ZIP", "Py3.7 macOS 64-bit ?32-bit", "Py3.6|Py3.5 Win 32-bit", "Py* Win 64-bit", "Linux *" ]
+featured_asset_types = [ "Sources TAR.GZ", "Py3.8 macOS 64-bit ?32-bit", "Py3.7|Py3.6 Win 32-bit", "Py* Win 64-bit", "Linux *" ]
 # In this example, the "official_pypi" template defines a locator with the ID "pypi".
 # However, the "project" property is not defined in the template because it's project-specific.
 # Hence, we define that property here.
